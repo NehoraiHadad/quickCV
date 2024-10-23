@@ -1,7 +1,6 @@
 import React from "react";
 import { useResume } from "@/context/ResumeContext";
 import TextImprovement from "@/components/AIFeatures/TextImprovement";
-import { WorkExperience as WorkExperienceType } from "@/types/resume";
 
 export default function WorkExperience() {
   const {
