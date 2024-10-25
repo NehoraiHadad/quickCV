@@ -48,7 +48,7 @@ const ResumePreview: React.FC = () => {
         } catch (e) {
           console.log(
             "Access to stylesheet blocked by CORS policy or something :",
-            styleSheet.href
+            styleSheet.href, e
           );
           return "";
         }

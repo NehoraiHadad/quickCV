@@ -30,7 +30,7 @@ const CleanCardTemplate: React.FC<CleanCardTemplateProps> = ({
 
   return (
     <div
-      className="p-8 w-full h-full mx-auto bg-white font-sans shadow-lg"
+      className="p-8 w-full h-full mx-auto bg-white font-sans"
       style={{ color: templateColors.secondary }}
     >
       {/* Header */}

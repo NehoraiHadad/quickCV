@@ -74,7 +74,7 @@ const ResumeBuilderContent: React.FC = () => {
           {isNavOpen ? 'Close' : 'Menu'}
         </button>
       </header>
-      <div className="flex-1 flex flex-col md:flex-row relative">
+      <div className="flex-1 flex flex-col md:flex-row relative max-h-[91.27vh]">
         <nav className={`w-full md:w-48 bg-gray-100 p-4 overflow-y-auto fixed md:static inset-0 z-20 ${isNavOpen ? 'block' : 'hidden'} md:block pt-20 md:pt-4`}>
           <ul className="space-y-2">
             {[

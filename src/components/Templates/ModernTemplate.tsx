@@ -27,7 +27,7 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ resumeData }) => {
   const templateColors = { ...defaultColors, ...colors };
 
   return (
-    <div className="w-[210mm] h-[297mm] mx-auto bg-white p-8 flex flex-col" style={{ color: templateColors.secondary }}>
+    <div className="mx-auto w-full h-full bg-white p-8 flex flex-col" style={{ color: templateColors.secondary }}>
       {/* Header */}
       <header className="mb-4">
         <h1 className="text-3xl font-bold" style={{ color: templateColors.primary }}>{personalInfo.name}</h1>

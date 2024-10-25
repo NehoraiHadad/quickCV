@@ -82,7 +82,7 @@ export default function ApiKeyInput() {
       )}
       <p className="text-xs text-gray-500 mt-1">
         Providing an API key enables advanced AI features. You can still use the app without one.
-        The API key is stored in your browser's local storage.
+        The API key is stored in your browser&apos;s local storage.
       </p>
       {hasStoredKey && (
         <button
