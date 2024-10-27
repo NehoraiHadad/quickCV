@@ -10,6 +10,7 @@ import TemplateSelection from "@/components/ResumeBuilder/TemplateSelection";
 import ResumePreview from "@/components/ResumeBuilder/ResumePreview";
 import { ResumeProvider, useResume } from "@/context/ResumeContext";
 import ColorCustomization from "@/components/ResumeBuilder/ColorCustomization";
+import Image from "next/image";
 
 const ResumeBuilderContent: React.FC = () => {
   const [currentSection, setCurrentSection] = useState("personal-info");
@@ -67,8 +68,41 @@ const ResumeBuilderContent: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <header className="bg-blue-600 text-white py-4 px-6 shadow flex justify-between items-center z-30 relative">
         <h1 className="text-2xl font-bold">Build Your Resume</h1>
-        <button className="md:hidden" onClick={() => setIsNavOpen(!isNavOpen)}>
-          {isNavOpen ? "Close" : "Menu"}
+        <button
+          className="md:hidden p-2 hover:bg-blue-700 rounded-lg transition-colors duration-300"
+          onClick={() => setIsNavOpen(!isNavOpen)}
+        >
+          {isNavOpen ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              />
+            </svg>
+          )}
         </button>
       </header>
       <div className="flex-1 flex flex-col md:flex-row relative max-h-[91.27vh]">
@@ -126,8 +160,16 @@ const ResumeBuilderContent: React.FC = () => {
               />
             </label>
           </div>
-          <div className="mt-auto pt-4 flex justify-center">
-            {" "}
+          <div className="mt-auto flex flex-col-reverse justify-center items-center">
+            <a href="/">
+              <Image
+                src="/images/logo.png"
+                alt="QuickCV Logo"
+                width={100}
+                height={35}
+                className="inline-block mt-4 "
+              />
+            </a>
             <a
               href="https://github.com/NehoraiHadad/quickCV"
               target="_blank"
