@@ -32,9 +32,8 @@
 
 - ~~Multiple professional templates~~ English only
 - AI-powered content suggestions
-- Real-time grammar checking
+- Grammar checking
 - Customizable sections
-- Drag-and-drop interface
 
 </td>
 <td>
@@ -43,9 +42,8 @@
 
 - Custom color themes
 - Flexible layouts
-- Font selection
 - Section reordering
-- Export options
+- Export
 
 </td>
 </tr>
