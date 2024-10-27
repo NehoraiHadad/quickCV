@@ -1,104 +1,195 @@
-# QuickCV - Resume Builder
+<div align="center">
 
-QuickCV is a modern, AI-powered resume builder application built with Next.js, TypeScript, and Tailwind CSS. It helps users create professional resumes with multiple templates and smart content suggestions.
+# QuickCV
 
-## Features
+![QuickCV Logo](./public/images/logo.png)
 
-- 🎨 Multiple resume templates
-- 🌐 Multilingual support (English & Hebrew)
-- 🎯 AI-powered content optimization
-- 🔍 Grammar checking
-- 💡 Smart content suggestions
-- 🎨 Custom color themes
-- 📱 Responsive design
-- 💾 Save/Load resume data
+### A Modern, AI-Powered Resume Builder
 
-## Getting Started
+[![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-### Prerequisites
+</div>
 
-- Node.js
-- npm or yarn
+## ✨ Overview
 
-### Installation
+**QuickCV** transforms the resume creation process with AI-powered assistance, professional templates, and intuitive customization options. Built for modern professionals using cutting-edge web technologies.
 
-1. Clone the repository:
-   bash
-   git clone https://github.com/yourusername/quickcv.git
-   cd quickcv
+<div align="center">
 
-2. Install dependencies:
-   bash
-   npm install
-   or
-   yarn install
+![QuickCV Dashboard](./public/images/1.png)
 
-3. Run the development server:
-   bash
-   npm run dev
-   or
-   yarn dev
+</div>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Key Features
 
-## Project Structure
+<table>
+<tr>
+<td width="50%">
 
-quickcv/
-├── src/
-│ ├── app/ # Next.js app directory
-│ ├── components/ # React components
-│ │ ├── AIFeatures/ # AI-related components
-│ │ ├── ResumeBuilder/ # Resume builder components
-│ │ └── Templates/ # Resume templates
-│ ├── context/ # React context
-│ ├── hooks/ # Custom hooks
-│ ├── i18n/ # Internationalization
-│ ├── types/ # TypeScript types
-│ └── utils/ # Utility functions
-├── public/ # Static files
-└── ...config files
+### 📝 Smart Resume Building
 
-## Technologies Used
+- ~~Multiple professional templates~~ English only
+- AI-powered content suggestions
+- Real-time grammar checking
+- Customizable sections
+- Drag-and-drop interface
 
-- [Next.js](https://nextjs.org/) - React framework
-- [TypeScript](https://www.typescriptlang.org/) - Type safety
-- [Tailwind CSS](https://tailwindcss.com/) - Styling
-- [next-i18next](https://github.com/isaachinman/next-i18next) - Internationalization
+</td>
+<td>
 
-## Features in Detail
-
-### Resume Templates
-
-- Default Template
-- Modern Template
-- Clean Card Template
-
-### AI Features
-
-- Content optimization
-- Grammar checking
-- Smart suggestions for:
-  - Project descriptions
-  - Work experience
-  - Skills
-  - Professional summary
-
-### Customization
+### 🌈 Customization
 
 - Custom color themes
-- Multiple sections support
-- Flexible layout options
+- Flexible layouts
+- Font selection
+- Section reordering
+- Export options
 
-## Contributing
+</td>
+</tr>
+</table>
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## 💫 Templates Gallery
 
-## License
+<div align="center">
+<table>
+<tr>
+<td align="center">
+<img src="./public/images/2.png" width="200" alt="Modern Template"/>
+<br />
+<b>Default Template</b>
+</td>
+<td align="center">
+<img src="./public/images/3.png" width="200" alt="Professional Template"/>
+<br />
+<b>Modern Template</b>
+</td>
+<td align="center">
+<img src="./public/images/4.png" width="200" alt="Creative Template"/>
+<br />
+<b>CleanCard Template</b>
+</td>
+</tr>
+</table>
+</div>
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 🤖 AI Features
 
-## Acknowledgments
+<div align="center">
+
+![AI Features Preview](./public/images/5.png)
+
+</div>
+
+### Smart Suggestions
+
+- ✍️ Project descriptions
+- 💼 Work experience optimization
+- 🎯 Skills recommendations
+- 📝 Professional summary generation
+
+### Content Enhancement
+
+- 📊 Experience impact metrics
+- 🔍 Keyword optimization
+- ✨ Action verb suggestions
+- 🎯 Industry-specific terms
+
+## 🛠️ Tech Stack
+
+- **Frontend Framework:** Next.js 14
+- **Type Safety:** TypeScript
+- **Styling:** Tailwind CSS
+- **Internationalization:** next-i18next
+- **State Management:** React Context
+- **AI Integration:** OpenAI API
+
+## 📦 Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/NehoraiHadad/quickCV
+
+# Navigate to project directory
+cd quickCV
+
+# Install dependencies
+npm install
+# or
+yarn install
+
+# Start development server
+npm run dev
+# or
+yarn dev
+```
+
+## 📂 Project Structure
+
+```
+quickcv/
+├── src/
+│   ├── app/                # Next.js app directory
+│   ├── components/         # React components
+│   │   ├── AIFeatures/     # AI-related components
+│   │   ├── ResumeBuilder/  # Resume builder components
+│   │   └── Templates/      # Resume templates
+│   ├── context/           # React context
+│   ├── hooks/             # Custom hooks
+│   ├── i18n/              # Internationalization
+│   ├── types/             # TypeScript types
+│   └── utils/             # Utility functions
+├── public/               # Static files
+└── ...config files
+```
+
+## 🌐 Language Support
+
+<div align="center">
+
+Currently supporting:
+🇺🇸 English | ~~🇮🇱 Hebrew~~
+
+</div>
+
+## 🎨 Theme Customization
+
+<div align="center">
+
+![Theme Preview](./public/images/6.png)
+
+Choose from multiple color schemes or create your own custom theme.
+
+</div>
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 💝 Acknowledgments
 
 - [Geist Font](https://vercel.com/font) by Vercel
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Next.js](https://nextjs.org/)
+
+---
+
+<div align="center">
+
+Made with ❤️ by [Nehorai Hadad](https://github.com/NehoraiHadad)
+
+[Report Bug](https://github.com/NehoraiHadad/quickCV/issues) · [Request Feature](https://github.com/NehoraiHadad/quickCV/issues)
+
+</div>

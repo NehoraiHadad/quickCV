@@ -25,7 +25,8 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto w-full flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mt-12 relative z-50 p-6">
+      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mt-10 md:mt-12 relative z-50 p-6 max-h-[90vh] overflow-y-auto">
+
         <button
           onClick={onReject}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200"
