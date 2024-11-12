@@ -8,9 +8,8 @@ interface TemplatePreferencesFormProps {
 export default function TemplatePreferencesForm({
   onSubmit,
 }: TemplatePreferencesFormProps) {
-
   const [preferences, setPreferences] = useState<TemplatePreferences>({
-    name: "", 
+    name: "",
     layout: "single-column",
     headerStyle: {
       position: "top",
@@ -116,7 +115,7 @@ export default function TemplatePreferencesForm({
               </label>
               <input
                 type="color"
-                value={value}
+                value={value.toString()}
                 onChange={(e) =>
                   setPreferences({
                     ...preferences,

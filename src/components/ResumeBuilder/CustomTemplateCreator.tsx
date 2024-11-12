@@ -6,7 +6,6 @@ import { useAIApi } from "../../hooks/useAIApi";
 import { AITemplateGenerator } from "../AIFeatures/AITemplateGenerator";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { useCustomTemplates } from "../../hooks/useCustomTemplates";
 
 interface CustomTemplateCreatorProps {
   isOpen: boolean;
