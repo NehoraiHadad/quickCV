@@ -226,7 +226,6 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
   const [freeformDescription, setFreeformDescription] = useState("");
 
   const { apiKey, service } = useAIApi();
-  const { resetTemplateCode } = useCustomTemplates();
 
   // Load editing template data when available
   useEffect(() => {

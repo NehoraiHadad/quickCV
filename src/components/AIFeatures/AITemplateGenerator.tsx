@@ -2,7 +2,7 @@ import { generateAIContent } from "../../utils/aiApi";
 import { TemplatePreferences } from "../../types/templates";
 
 const createTemplatePrompt = (preferences: TemplatePreferences): string => {
-  let prompt = `CRITICAL RESPONSE FORMAT:
+  const prompt = `CRITICAL RESPONSE FORMAT:
 1. Return ONLY pure React.createElement code
 2. NO imports, NO exports, NO comments
 3. NO markdown code blocks or backticks
@@ -121,7 +121,7 @@ export const AITemplateGenerator = async (
     }
 
     // Clean up the response
-    let templateCode = response[0]
+    const templateCode = response[0]
       .replace(/```[a-z]*\n?/g, "") // Remove code block markers
       .trim();
 

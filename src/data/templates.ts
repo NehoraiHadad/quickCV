@@ -13,7 +13,8 @@ export const sampleResumeData: ResumeData = {
     email: "john@example.com",
     phone: "123-456-7890",
     location: "New York, NY",
-    summary: "Experienced software developer with a passion for creating innovative solutions."
+    summary:
+      "Experienced software developer with a passion for creating innovative solutions.",
   },
   workExperience: [
     {
@@ -22,7 +23,8 @@ export const sampleResumeData: ResumeData = {
       position: "Senior Developer",
       startDate: "2018-01",
       endDate: "Present",
-      description: "Leading development of web applications using React and Node.js."
+      description:
+        "Leading development of web applications using React and Node.js.",
     },
     {
       id: "2",
@@ -30,8 +32,9 @@ export const sampleResumeData: ResumeData = {
       position: "Senior Developer",
       startDate: "2018-01",
       endDate: "Present",
-      description: "Leading development of web applications using React and Node.js."
-    }
+      description:
+        "Leading development of web applications using React and Node.js.",
+    },
   ],
   education: [
     {
@@ -41,45 +44,47 @@ export const sampleResumeData: ResumeData = {
       fieldOfStudy: "Computer Science",
       startDate: "2014-09",
       endDate: "2018-05",
-      description: "Focused on software engineering and data structures."
-    }
+      description: "Focused on software engineering and data structures.",
+    },
   ],
   skills: ["JavaScript", "React", "Node.js", "Python", "AWS", "Docker"],
   projects: [
     {
       id: "1",
       name: "E-commerce Platform",
-      description: "Developed a scalable e-commerce platform using React, Node.js, and MongoDB.",
+      description:
+        "Developed a scalable e-commerce platform using React, Node.js, and MongoDB.",
       technologies: "React, Node.js, MongoDB, AWS",
       link: "https://example.com/ecommerce-platform",
-      github: "https://github.com/johndoe/ecommerce-platform"
+      github: "https://github.com/johndoe/ecommerce-platform",
     },
     {
       id: "2",
       name: "AI Chatbot",
-      description: "Created an AI-powered chatbot for customer service using Python and TensorFlow.",
+      description:
+        "Created an AI-powered chatbot for customer service using Python and TensorFlow.",
       technologies: "Python, TensorFlow, NLP, Docker",
       link: "https://example.com/ai-chatbot",
-      github: "https://github.com/johndoe/ai-chatbot"
-    }
+      github: "https://github.com/johndoe/ai-chatbot",
+    },
   ],
   additionalSections: [
     {
       id: "1",
       title: "Certifications",
-      content: "AWS Certified Solutions Architect, Certified Scrum Master"
+      content: "AWS Certified Solutions Architect, Certified Scrum Master",
     },
     {
       id: "2",
       title: "Languages",
-      content: "English (Native), Spanish (Fluent), French (Basic)"
-    }
-  ], 
+      content: "English (Native), Spanish (Fluent), French (Basic)",
+    },
+  ],
   colors: {
     primary: "#000000",
     secondary: "#144790",
-    accent: "#6175db"
-  }
+    accent: "#6175db",
+  },
 };
 
 const templates: Template[] = [
@@ -88,33 +93,41 @@ const templates: Template[] = [
     name: "Default",
     render: (resumeData: ResumeData) =>
       React.createElement(DefaultTemplate, { resumeData }),
-    preview: React.createElement(DefaultTemplate, { resumeData: sampleResumeData }),
+    preview: React.createElement(DefaultTemplate, {
+      resumeData: sampleResumeData,
+    }),
   },
   {
     id: "modern",
     name: "Modern",
     render: (resumeData: ResumeData) =>
       React.createElement(ModernTemplate, { resumeData }),
-    preview: React.createElement(ModernTemplate, { resumeData: sampleResumeData }),
+    preview: React.createElement(ModernTemplate, {
+      resumeData: sampleResumeData,
+    }),
   },
   {
     id: "CleanCard",
     name: "CleanCard",
     render: (resumeData: ResumeData) =>
       React.createElement(CleanCardTemplate, { resumeData }),
-    preview: React.createElement(CleanCardTemplate, { resumeData: sampleResumeData }),
+    preview: React.createElement(CleanCardTemplate, {
+      resumeData: sampleResumeData,
+    }),
   },
 ];
 
-export const createCustomTemplateObject = (customTemplate: CustomTemplate): Template => {
-  console.log('Creating template object for:', customTemplate.id);
-  
+export const createCustomTemplateObject = (
+  customTemplate: CustomTemplate
+): Template => {
+  console.log("Creating template object for:", customTemplate.id);
+
   const template = {
     id: customTemplate.id,
     name: customTemplate.name,
     render: (resumeData: ResumeData) => {
       try {
-        console.log('Rendering template:', customTemplate.id);
+        console.log("Rendering template:", customTemplate.id);
         const templateFunction = new Function(
           "React",
           "resumeData",
@@ -123,9 +136,10 @@ export const createCustomTemplateObject = (customTemplate: CustomTemplate): Temp
           const { personalInfo, workExperience, education, skills, projects, additionalSections } = resumeData;
           try {
             with (React) {
-              ${customTemplate.code.trim().startsWith('return') 
-                ? customTemplate.code 
-                : `return (${customTemplate.code})`
+              ${
+                customTemplate.code.trim().startsWith("return")
+                  ? customTemplate.code
+                  : `return (${customTemplate.code})`
               }
             }
           } catch (error) {
@@ -135,20 +149,23 @@ export const createCustomTemplateObject = (customTemplate: CustomTemplate): Temp
           `
         );
 
-        return templateFunction(
-          React,
-          resumeData,
-          resumeData.colors || {}
-        );
+        return templateFunction(React, resumeData, resumeData.colors || {});
       } catch (err: unknown) {
         console.error("Error rendering custom template:", err);
-        const errorMessage = err instanceof Error ? err.message : 
-                            typeof err === 'string' ? err :
-                            'Unknown error';
-        
-        return React.createElement('div', {
-          className: 'p-4 text-red-500 border border-red-300 rounded'
-        }, 'Render Error: ' + errorMessage);
+        const errorMessage =
+          err instanceof Error
+            ? err.message
+            : typeof err === "string"
+            ? err
+            : "Unknown error";
+
+        return React.createElement(
+          "div",
+          {
+            className: "p-4 text-red-500 border border-red-300 rounded",
+          },
+          "Render Error: " + errorMessage
+        );
       }
     },
     preview: (() => {
@@ -161,9 +178,10 @@ export const createCustomTemplateObject = (customTemplate: CustomTemplate): Temp
           const { personalInfo, workExperience, education, skills, projects, additionalSections } = resumeData;
           try {
             with (React) {
-              ${customTemplate.code.trim().startsWith('return') 
-                ? customTemplate.code 
-                : `return (${customTemplate.code})`
+              ${
+                customTemplate.code.trim().startsWith("return")
+                  ? customTemplate.code
+                  : `return (${customTemplate.code})`
               }
             }
           } catch (error) {
@@ -180,18 +198,25 @@ export const createCustomTemplateObject = (customTemplate: CustomTemplate): Temp
         );
       } catch (err: unknown) {
         console.error("Error rendering custom template preview:", err);
-        const errorMessage = err instanceof Error ? err.message : 
-                            typeof err === 'string' ? err :
-                            'Unknown error';
-        
-        return React.createElement('div', {
-          className: 'p-4 text-red-500 border border-red-300 rounded'
-        }, 'Preview Error: ' + errorMessage);
+        const errorMessage =
+          err instanceof Error
+            ? err.message
+            : typeof err === "string"
+            ? err
+            : "Unknown error";
+
+        return React.createElement(
+          "div",
+          {
+            className: "p-4 text-red-500 border border-red-300 rounded",
+          },
+          "Preview Error: " + errorMessage
+        );
       }
     })(),
   };
 
-  console.log('Created template object:', template.id);
+  console.log("Created template object:", template.id);
   return template;
 };
 
