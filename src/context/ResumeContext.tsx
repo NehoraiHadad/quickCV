@@ -40,7 +40,7 @@ interface ResumeContextValue {
   updateColors: (updatedColors: Partial<{ [key: string]: string }>) => void;
 }
 
-const ResumeContext = createContext<ResumeContextValue | undefined>(undefined);
+export const ResumeContext = createContext<ResumeContextValue | undefined>(undefined);
 
 export const ResumeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

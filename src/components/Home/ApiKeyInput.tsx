@@ -1,17 +1,17 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { validateApiKey } from '@/utils/aiApi';
+"use client";
+import { useState, useEffect } from "react";
+import { validateApiKey } from "@/utils/aiApi";
 
 export default function ApiKeyInput() {
-  const [apiKey, setApiKey] = useState('');
-  const [service, setService] = useState('openai');
+  const [apiKey, setApiKey] = useState("");
+  const [service, setService] = useState("openai");
   const [isValidating, setIsValidating] = useState(false);
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const [hasStoredKey, setHasStoredKey] = useState(false);
 
   useEffect(() => {
-    const storedKey = localStorage.getItem('aiApiKey');
-    const storedService = localStorage.getItem('aiService');
+    const storedKey = localStorage.getItem("aiApiKey");
+    const storedService = localStorage.getItem("aiService");
     if (storedKey && storedService) {
       setApiKey(storedKey);
       setService(storedService);
@@ -26,24 +26,27 @@ export default function ApiKeyInput() {
     setIsValid(valid);
     setIsValidating(false);
     if (valid) {
-      localStorage.setItem('aiApiKey', apiKey);
-      localStorage.setItem('aiService', service);
+      localStorage.setItem("aiApiKey", apiKey);
+      localStorage.setItem("aiService", service);
       setHasStoredKey(true);
     }
   };
 
   const handleDelete = () => {
-    localStorage.removeItem('aiApiKey');
-    localStorage.removeItem('aiService');
-    setApiKey('');
-    setService('openai');
+    localStorage.removeItem("aiApiKey");
+    localStorage.removeItem("aiService");
+    setApiKey("");
+    setService("openai");
     setIsValid(null);
     setHasStoredKey(false);
   };
 
   return (
     <form onSubmit={handleSubmit} className="mb-6">
-      <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700 mb-2">
+      <label
+        htmlFor="apiKey"
+        className="block text-sm font-medium text-gray-700 mb-2"
+      >
         Enter your AI API Key
       </label>
       <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
@@ -71,18 +74,23 @@ export default function ApiKeyInput() {
             className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 whitespace-nowrap"
             disabled={isValidating}
           >
-            {isValidating ? 'Validating...' : 'Validate'}
+            {isValidating ? "Validating..." : "Validate"}
           </button>
         </div>
       </div>
       {isValid !== null && (
-        <p className={`mt-2 text-sm ${isValid ? 'text-green-600' : 'text-red-600'}`}>
-          {isValid ? 'API key is valid!' : 'Invalid API key. Please try again.'}
+        <p
+          className={`mt-2 text-sm ${
+            isValid ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {isValid ? "API key is valid!" : "Invalid API key. Please try again."}
         </p>
       )}
       <p className="text-xs text-gray-500 mt-1">
-        Providing an API key enables advanced AI features. You can still use the app without one.
-        The API key is stored in your browser&apos;s local storage.
+        Providing an API key enables advanced AI features. You can still use the
+        app without one. The API key is stored in your browser&apos;s local
+        storage.
       </p>
       {hasStoredKey && (
         <button

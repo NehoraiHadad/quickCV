@@ -13,6 +13,7 @@ export default function Projects() {
       description: "",
       technologies: "",
       link: "",
+      github: "",
     });
   };
 
@@ -68,6 +69,20 @@ export default function Projects() {
             initialText={proj.technologies}
             field="project technologies"
             onImprove={(improvedText) => updateProjectItem(proj.id, "technologies", improvedText)}
+          />
+          <input
+            type="url"
+            placeholder="Project Link"
+            value={proj.link}
+            onChange={(e) => updateProjectItem(proj.id, "link", e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 mt-2"
+          />
+          <input
+            type="url"
+            placeholder="GitHub Repository"
+            value={proj.github}
+            onChange={(e) => updateProjectItem(proj.id, "github", e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 mt-2"
           />
           <button
             onClick={() => removeProject(proj.id)}

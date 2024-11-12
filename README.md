@@ -44,6 +44,7 @@
 - Flexible layouts
 - Section reordering
 - Export
+- **Template Addition (Alpha)**
 
 </td>
 </tr>

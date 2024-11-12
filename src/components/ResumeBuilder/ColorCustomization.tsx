@@ -29,12 +29,15 @@ export default function ColorCustomization() {
             value={colors[option.key as keyof typeof colors] || '#000000'}
             onChange={(e) => handleColorChange(option.key, e.target.value)}
             className="w-12 h-8 border border-gray-300 rounded-md shadow-sm cursor-pointer"
+            aria-label={`Pick ${option.name.toLowerCase()} color`}
+            data-testid={`${option.key}-color-picker`}
           />
           <input
             type="text"
             value={colors[option.key as keyof typeof colors] || '#000000'}
             onChange={(e) => handleColorChange(option.key, e.target.value)}
             className="w-24 px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            data-testid={`${option.key}-color-text`}
           />
         </div>
       ))}

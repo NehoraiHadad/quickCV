@@ -4,8 +4,9 @@ import { ResumeData } from "@/types/resume";
 import DefaultTemplate from "@/components/Templates/DefaultTemplate";
 import ModernTemplate from "@/components/Templates/ModernTemplate";
 import CleanCardTemplate from "@/components/Templates/CleanCardTemplate";
+import { CustomTemplate } from "@/types/templates";
 
-const sampleResumeData: ResumeData = {
+export const sampleResumeData: ResumeData = {
   personalInfo: {
     name: "John Doe",
     title: "Developer",
@@ -50,14 +51,16 @@ const sampleResumeData: ResumeData = {
       name: "E-commerce Platform",
       description: "Developed a scalable e-commerce platform using React, Node.js, and MongoDB.",
       technologies: "React, Node.js, MongoDB, AWS",
-      link: "https://github.com/johndoe/ecommerce-platform"
+      link: "https://example.com/ecommerce-platform",
+      github: "https://github.com/johndoe/ecommerce-platform"
     },
     {
       id: "2",
       name: "AI Chatbot",
       description: "Created an AI-powered chatbot for customer service using Python and TensorFlow.",
       technologies: "Python, TensorFlow, NLP, Docker",
-      link: "https://github.com/johndoe/ai-chatbot"
+      link: "https://example.com/ai-chatbot",
+      github: "https://github.com/johndoe/ai-chatbot"
     }
   ],
   additionalSections: [
@@ -84,7 +87,6 @@ const templates: Template[] = [
     id: "default",
     name: "Default",
     render: (resumeData: ResumeData) =>
-      // React.createElement(DefaultTemplate, { resumeData: sampleResumeData }),
       React.createElement(DefaultTemplate, { resumeData }),
     preview: React.createElement(DefaultTemplate, { resumeData: sampleResumeData }),
   },
@@ -92,7 +94,6 @@ const templates: Template[] = [
     id: "modern",
     name: "Modern",
     render: (resumeData: ResumeData) =>
-      // React.createElement(ModernTemplate, { resumeData: sampleResumeData }),
       React.createElement(ModernTemplate, { resumeData }),
     preview: React.createElement(ModernTemplate, { resumeData: sampleResumeData }),
   },
@@ -100,10 +101,90 @@ const templates: Template[] = [
     id: "CleanCard",
     name: "CleanCard",
     render: (resumeData: ResumeData) =>
-      // React.createElement(CleanCardTemplate, { resumeData: sampleResumeData }),
       React.createElement(CleanCardTemplate, { resumeData }),
     preview: React.createElement(CleanCardTemplate, { resumeData: sampleResumeData }),
   },
 ];
+
+export const createCustomTemplateObject = (customTemplate: CustomTemplate): Template => {
+  console.log('Creating template object for:', customTemplate.id);
+  
+  const template = {
+    id: customTemplate.id,
+    name: customTemplate.name,
+    render: (resumeData: ResumeData) => {
+      try {
+        console.log('Rendering template:', customTemplate.id);
+        const templateFunction = new Function(
+          "React",
+          "resumeData",
+          "templateColors",
+          `
+          const { personalInfo, workExperience, education, skills, projects, additionalSections } = resumeData;
+          try {
+            with (React) {
+              ${customTemplate.code.trim().startsWith('return') 
+                ? customTemplate.code 
+                : `return (${customTemplate.code})`
+              }
+            }
+          } catch (error) {
+            console.error("Template execution error:", error);
+            throw error;
+          }
+          `
+        );
+
+        return templateFunction(
+          React,
+          resumeData,
+          resumeData.colors || {}
+        );
+      } catch (err: any) {
+        console.error("Error rendering custom template:", err);
+        return React.createElement('div', {
+          className: 'p-4 text-red-500 border border-red-300 rounded'
+        }, 'Render Error: ' + (err?.message || 'Unknown error'));
+      }
+    },
+    preview: (() => {
+      try {
+        const templateFunction = new Function(
+          "React",
+          "resumeData",
+          "templateColors",
+          `
+          const { personalInfo, workExperience, education, skills, projects, additionalSections } = resumeData;
+          try {
+            with (React) {
+              ${customTemplate.code.trim().startsWith('return') 
+                ? customTemplate.code 
+                : `return (${customTemplate.code})`
+              }
+            }
+          } catch (error) {
+            console.error("Template execution error:", error);
+            throw error;
+          }
+          `
+        );
+
+        return templateFunction(
+          React,
+          sampleResumeData,
+          sampleResumeData.colors || {}
+        );
+      } catch (err: any) {
+        console.error("Error rendering custom template preview:", err);
+        return React.createElement('div', {
+          className: 'p-4 text-red-500 border border-red-300 rounded'
+        }, 'Preview Error: ' + (err?.message || 'Unknown error'));
+      }
+    })(),
+  };
+
+  console.log('Created template object:', template.id);
+  return template;
+};
 
 export default templates;

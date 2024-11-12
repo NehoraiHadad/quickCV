@@ -2,35 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .btn {
-    @apply inline-flex items-center justify-center border border-transparent text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2;
-  }
-
-  .btn-primary {
-    @apply bg-primary text-white hover:bg-primary/80 focus:ring-primary/50;
-  }
-
-  .btn-secondary {
-    @apply bg-secondary text-white hover:bg-secondary/80 focus:ring-secondary/50;
-  }
-
-  .form-input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary;
-  }
-
-  .form-textarea {
-    @apply form-input;
-  }
-
-  .form-select {
-    @apply form-input;
-  }
-
-  .card {
-    @apply border p-4 rounded-md bg-white shadow;
-  }
-}
 @keyframes starRise {
   0% {
     opacity: 0;
@@ -52,7 +23,9 @@
   }
 }
 
-.star-1, .star-2, .star-3 {
+.star-1,
+.star-2,
+.star-3 {
   opacity: 0;
   transform-origin: center;
 }
@@ -67,4 +40,72 @@
 
 .group:hover .star-3 {
   animation: starRise 2s ease-in-out 0.6s infinite;
+}
+
+.split {
+  display: flex;
+}
+
+.gutter {
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.gutter:hover {
+  background-color: #ddd;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+  cursor: col-resize;
+}
+
+/* עיצוב סרגל הגלילה */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* עיצוב ספציפי לאזורים מסוימים */
+.resume-preview-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(136, 136, 136, 0.5) rgba(241, 241, 241, 0.5);
+}
+
+.resume-preview-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.resume-preview-scroll::-webkit-scrollbar-track {
+  background: rgba(241, 241, 241, 0.5);
+}
+
+.resume-preview-scroll::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.5);
+}
+
+.resume-preview-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 102, 102, 0.7);
 }

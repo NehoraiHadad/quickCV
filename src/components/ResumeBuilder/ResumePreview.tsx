@@ -1,18 +1,42 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { useResume } from "@/context/ResumeContext";
 import templates from "@/data/templates";
+import { useCustomTemplates } from "@/hooks/useCustomTemplates";
 
 const ResumePreview: React.FC = () => {
   const { resumeData, selectedTemplate } = useResume();
+  const { customTemplates, loadTemplatesFromStorage } = useCustomTemplates();
   const [zoomLevel, setZoomLevel] = useState<number>(0.15);
   const containerRef = useRef<HTMLDivElement>(null);
   const resumeContentRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [showZoomControls, setShowZoomControls] = useState(false);
 
-  const defaultTemplate = templates[0];
-  const currentTemplate =
-    templates.find((t) => t.id === selectedTemplate) || defaultTemplate;
+  useEffect(() => {
+    if (selectedTemplate.startsWith("custom-")) {
+      loadTemplatesFromStorage();
+    }
+  }, [selectedTemplate, loadTemplatesFromStorage]);
+
+  const currentTemplate = useMemo(() => {
+    const allTemplates = [...templates, ...customTemplates];
+
+    console.log("Template Selection Process:", {
+      selectedTemplateId: selectedTemplate,
+      customTemplatesCount: customTemplates.length,
+      customTemplateIds: customTemplates.map((t) => t.id),
+      allTemplatesCount: allTemplates.length,
+      allTemplateIds: allTemplates.map((t) => t.id),
+    });
+
+    let template = allTemplates.find((t) => t.id === selectedTemplate);
+
+    if (!template) {
+      return templates[0];
+    }
+
+    return template;
+  }, [selectedTemplate, customTemplates]);
 
   useEffect(() => {
     const updateScale = () => {
@@ -48,7 +72,8 @@ const ResumePreview: React.FC = () => {
         } catch (e) {
           console.log(
             "Access to stylesheet blocked by CORS policy or something :",
-            styleSheet.href, e
+            styleSheet.href,
+            e
           );
           return "";
         }
@@ -126,7 +151,7 @@ const ResumePreview: React.FC = () => {
   return (
     <div className="relative h-full">
       <div
-        className="absolute top-[-10px] left-[-10px] z-10 flex items-center bg-white rounded-full p-1 shadow-md"
+        className="absolute top-[-10px] left-[-10px] z-10 flex items-center bg-white rounded-full p-1 shadow-md "
         onMouseEnter={() => setShowZoomControls(true)}
         onMouseLeave={() => setShowZoomControls(false)}
       >
@@ -185,7 +210,7 @@ const ResumePreview: React.FC = () => {
       </div>
       <div
         ref={containerRef}
-        className="overflow-hidden p-6"
+        className="overflow-hidden shadow-lg"
         style={{
           width: "210mm",
           height: "297mm",
@@ -193,7 +218,7 @@ const ResumePreview: React.FC = () => {
           transformOrigin: "top left",
         }}
       >
-        <div className="h-full shadow-lg" ref={resumeContentRef}>
+        <div className="h-full" ref={resumeContentRef}>
           {currentTemplate.render(resumeData)}
         </div>
       </div>
@@ -201,4 +226,4 @@ const ResumePreview: React.FC = () => {
   );
 };
 
-export default ResumePreview;
+export default React.memo(ResumePreview);

@@ -93,10 +93,21 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ resumeData }) => {
                       href={proj.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs hover:underline"
+                      className="text-xs hover:underline mr-3"
                       style={{ color: templateColors.accent }}
                     >
                       View Project
+                    </a>
+                  )}
+                  {proj.github && (
+                    <a
+                      href={proj.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs hover:underline"
+                      style={{ color: templateColors.accent }}
+                    >
+                      GitHub
                     </a>
                   )}
                 </div>

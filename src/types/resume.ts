@@ -33,6 +33,7 @@ export interface Project {
   description: string;
   technologies: string;
   link: string;
+  github: string;
 }
 
 export interface AdditionalSection {

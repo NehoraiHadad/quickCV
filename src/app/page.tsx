@@ -21,8 +21,15 @@ export default function HomePage() {
             src="/images/logo.png"
             alt="QuickCV Logo"
             width={200}
-            height={70}
+            height={50}
+            priority
             className="inline-block ml-2 pb-2"
+            style={{
+              width: "auto",
+              height: "auto",
+              maxWidth: "200px",
+              maxHeight: "50px",
+            }}
           />
         </h1>
         <LanguageSelector

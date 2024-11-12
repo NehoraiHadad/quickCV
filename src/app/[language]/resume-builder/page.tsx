@@ -11,6 +11,7 @@ import ResumePreview from "@/components/ResumeBuilder/ResumePreview";
 import { ResumeProvider, useResume } from "@/context/ResumeContext";
 import ColorCustomization from "@/components/ResumeBuilder/ColorCustomization";
 import Image from "next/image";
+import Split from 'react-split';
 
 const ResumeBuilderContent: React.FC = () => {
   const [currentSection, setCurrentSection] = useState("personal-info");
@@ -167,7 +168,7 @@ const ResumeBuilderContent: React.FC = () => {
                 alt="QuickCV Logo"
                 width={100}
                 height={35}
-                className="inline-block mt-4 "
+                className="inline-block mt-2 "
               />
             </a>
             <a
@@ -191,21 +192,37 @@ const ResumeBuilderContent: React.FC = () => {
             </a>
           </div>
         </nav>
-        <div className="flex-1 flex flex-col md:flex-row md:overflow-hidden">
-          <main
-            className={`flex-1 p-4 overflow-y-auto ${
-              mobileView === "main" ? "block" : "hidden"
-            } md:block`}
-          >
+        <div className="md:hidden flex-1 flex flex-col">
+          <main className={`flex-1 p-4 overflow-y-auto ${mobileView === "main" ? "block" : "hidden"}`}>
             {renderSection()}
           </main>
-          <aside
-            className={`w-full md:w-2/4 p-4 overflow-y-auto bg-gray-100 ${
-              mobileView === "aside" ? "block" : "hidden"
-            } md:block`}
-          >
+          <aside className={`w-full p-4 overflow-y-auto bg-gray-100 ${mobileView === "aside" ? "block" : "hidden"}`}>
             <ResumePreview />
           </aside>
+        </div>
+        <div className="hidden md:block flex-1">
+          <Split
+            className="flex flex-row h-full"
+            sizes={[60, 40]}
+            minSize={300}
+            gutterSize={8}
+            snapOffset={30}
+          >
+            <main
+              className={`flex-1 p-4 overflow-y-auto resume-preview-scroll ${
+                mobileView === "main" ? "block" : "hidden"
+              } md:block`}
+            >
+              {renderSection()}
+            </main>
+            <aside
+              className={`w-full md:w-2/4 p-4 overflow-y-auto bg-gray-100 resume-preview-scroll ${
+                mobileView === "aside" ? "block" : "hidden"
+              } md:block`}
+            >
+              <ResumePreview />
+            </aside>
+          </Split>
         </div>
         <div className="md:hidden fixed bottom-4 right-4 flex space-x-2 z-30">
           <button

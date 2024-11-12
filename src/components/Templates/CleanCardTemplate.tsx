@@ -147,7 +147,7 @@ const CleanCardTemplate: React.FC<CleanCardTemplateProps> = ({
               >
                 Projects
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 {projects.map((project) => (
                   <div
                     key={project.id}
@@ -175,9 +175,20 @@ const CleanCardTemplate: React.FC<CleanCardTemplateProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ color: templateColors.accent }}
-                        className="hover:underline text-sm"
+                        className="hover:underline text-sm mr-3"
                       >
                         View Project
+                      </a>
+                    )}
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: templateColors.accent }}
+                        className="hover:underline text-sm"
+                      >
+                        GitHub
                       </a>
                     )}
                   </div>

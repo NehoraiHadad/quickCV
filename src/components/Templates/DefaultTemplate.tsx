@@ -90,9 +90,9 @@ const DefaultTemplate: React.FC<DefaultTemplateProps> = ({ resumeData }) => {
       )}
 
       {/* Two-column layout */}
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-row gap-6">
         {/* Left column */}
-        <div className="w-full md:w-2/3">
+        <div className=" w-2/3">
           {/* Work Experience */}
           {workExperience.length > 0 && (
             <section className="mb-6">
@@ -151,10 +151,21 @@ const DefaultTemplate: React.FC<DefaultTemplateProps> = ({ resumeData }) => {
                       href={proj.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:text-blue-800 underline"
+                      className="text-xs text-blue-600 hover:text-blue-800 underline mr-3"
                       style={{ color: templateColors.accent }}
                     >
                       View Project
+                    </a>
+                  )}
+                  {proj.github && (
+                    <a
+                      href={proj.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:text-blue-800 underline"
+                      style={{ color: templateColors.accent }}
+                    >
+                      GitHub
                     </a>
                   )}
                 </div>
@@ -164,7 +175,7 @@ const DefaultTemplate: React.FC<DefaultTemplateProps> = ({ resumeData }) => {
         </div>
 
         {/* Right column */}
-        <div className="w-full md:w-1/3">
+        <div className="w-1/3">
           {/* Skills */}
           {skills.length > 0 && (
             <section className="mb-6">
