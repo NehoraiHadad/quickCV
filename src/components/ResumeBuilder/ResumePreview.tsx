@@ -29,7 +29,7 @@ const ResumePreview: React.FC = () => {
       allTemplateIds: allTemplates.map((t) => t.id),
     });
 
-    let template = allTemplates.find((t) => t.id === selectedTemplate);
+    const template = allTemplates.find((t) => t.id === selectedTemplate);
 
     if (!template) {
       return templates[0];
@@ -46,16 +46,16 @@ const ResumePreview: React.FC = () => {
         setScale(newScale);
       }
     };
-
+    const currentContainer = containerRef.current;
     const resizeObserver = new ResizeObserver(updateScale);
 
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
+    if (currentContainer) {
+      resizeObserver.observe(currentContainer);
     }
 
     return () => {
-      if (containerRef.current) {
-        resizeObserver.unobserve(containerRef.current);
+      if (currentContainer) {
+        resizeObserver.unobserve(currentContainer);
       }
     };
   }, []);
@@ -210,7 +210,7 @@ const ResumePreview: React.FC = () => {
       </div>
       <div
         ref={containerRef}
-        className="overflow-hidden shadow-lg"
+        className="overflow-hidden shadow-lg bg-white"
         style={{
           width: "210mm",
           height: "297mm",

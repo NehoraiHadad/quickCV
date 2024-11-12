@@ -1,19 +1,13 @@
 import React, { useState } from "react";
 import { TemplatePreferences } from "@/types/templates";
-import { useCustomTemplates } from "../../hooks/useCustomTemplates";
 
 interface TemplatePreferencesFormProps {
   onSubmit: (preferences: TemplatePreferences) => Promise<void>;
-  isLoading: boolean;
-  initialPreferences?: TemplatePreferences;
 }
 
 export default function TemplatePreferencesForm({
   onSubmit,
-  isLoading,
-  initialPreferences,
 }: TemplatePreferencesFormProps) {
-  const { resetTemplateCode } = useCustomTemplates();
 
   const [preferences, setPreferences] = useState<TemplatePreferences>({
     name: "", 

@@ -28,21 +28,27 @@ interface CodeViewState {
 }
 
 const cleanGeneratedCode = (code: string): string => {
-  let cleanCode = code.replace(/^```(jsx|javascript|typescript)?\n|```$/g, "").trim();
-  
+  let cleanCode = code
+    .replace(/^```(jsx|javascript|typescript)?\n|```$/g, "")
+    .trim();
+
   if (!cleanCode.trim()) {
     return "return";
   }
-  
-  if (!cleanCode.trim().startsWith('return')) {
+
+  if (!cleanCode.trim().startsWith("return")) {
     cleanCode = `return ${cleanCode}`;
   }
-  
+
   return cleanCode;
 };
 
-const TabButton = ({ active, children, onClick }: { 
-  active: boolean; 
+const TabButton = ({
+  active,
+  children,
+  onClick,
+}: {
+  active: boolean;
   children: React.ReactNode;
   onClick: () => void;
 }) => (
@@ -58,8 +64,11 @@ const TabButton = ({ active, children, onClick }: {
   </button>
 );
 
-const FormSection = ({ title, children }: { 
-  title: string; 
+const FormSection = ({
+  title,
+  children,
+}: {
+  title: string;
   children: React.ReactNode;
 }) => (
   <div className="mb-6 bg-white rounded-lg shadow-sm p-6 border border-gray-100 transition-shadow hover:shadow-md">
@@ -68,39 +77,47 @@ const FormSection = ({ title, children }: {
   </div>
 );
 
-const CodeEditor = ({ code, onChange }: {
+const CodeEditor = ({
+  code,
+  onChange,
+}: {
   code: string;
   onChange: (value: string) => void;
 }) => {
   const formatCode = () => {
     try {
       let formattedCode = code.trim();
-      
-      formattedCode = formattedCode.replace(/}\s*/g, '}\n');
-      
-      let indent = 0;
-      formattedCode = formattedCode.split('\n').map(line => {
-        line = line.trim();
-        if (line.includes('}')) {
-          indent = Math.max(0, indent - 1);
-        }
-        const formattedLine = '  '.repeat(indent) + line;
-        if (line.includes('{')) {
-          indent++;
-        }
-        return formattedLine;
-      }).join('\n');
 
-      formattedCode = formattedCode.replace(/,([^\s])/g, ', $1');
-      
-      formattedCode = formattedCode.replace(/;([^\s])/g, '; $1');
-      
+      formattedCode = formattedCode.replace(/}\s*/g, "}\n");
+
+      let indent = 0;
+      formattedCode = formattedCode
+        .split("\n")
+        .map((line) => {
+          line = line.trim();
+          if (line.includes("}")) {
+            indent = Math.max(0, indent - 1);
+          }
+          const formattedLine = "  ".repeat(indent) + line;
+          if (line.includes("{")) {
+            indent++;
+          }
+          return formattedLine;
+        })
+        .join("\n");
+
+      formattedCode = formattedCode.replace(/,([^\s])/g, ", $1");
+
+      formattedCode = formattedCode.replace(/;([^\s])/g, "; $1");
+
       formattedCode = formattedCode.replace(
-        /React\.createElement\((.*?)\)/g, 
+        /React\.createElement\((.*?)\)/g,
         (match, params) => {
-          const parts = params.split(',').map((p: string) => p.trim());
+          const parts = params.split(",").map((p: string) => p.trim());
           if (parts.length > 2) {
-            return `React.createElement(\n  ${parts[0]},\n  ${parts[1]},\n  ${parts.slice(2).join(',\n  ')}\n)`;
+            return `React.createElement(\n  ${parts[0]},\n  ${
+              parts[1]
+            },\n  ${parts.slice(2).join(",\n  ")}\n)`;
           }
           return match;
         }
@@ -108,14 +125,14 @@ const CodeEditor = ({ code, onChange }: {
 
       onChange(formattedCode);
     } catch (error) {
-      console.error('Failed to format code:', error);
+      console.error("Failed to format code:", error);
     }
   };
 
   return (
     <div className="relative">
       <div className="absolute top-3 right-3 z-10 flex gap-2">
-        <button 
+        <button
           onClick={formatCode}
           className="px-3 py-1.5 text-xs bg-gray-700 text-white rounded-md 
                    hover:bg-gray-600 transition-colors shadow-sm"
@@ -239,23 +256,26 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
         freeformDescription: freeformDescription,
       };
 
-      const response = await AITemplateGenerator(enrichedPrefs, apiKey, service);
-      
+      const response = await AITemplateGenerator(
+        enrichedPrefs,
+        apiKey,
+        service
+      );
+
       const cleanedCode = cleanGeneratedCode(response.templateCode);
       setGeneratedCode(cleanedCode);
       setCode(cleanedCode);
       setPreferences(prefs);
-      
+
       if (!response.success) {
         setError(response.error || "Failed to generate template");
       }
-      
+
       setActiveTab("code");
-      
     } catch (err) {
       setError("Failed to create template. Please try again.");
       console.error("Template creation error:", err);
-      
+
       setActiveTab("code");
     } finally {
       setIsLoading(false);
@@ -314,7 +334,13 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
         alignment: "left",
         size: "medium",
       },
-      sectionOrder: ["personal", "experience", "education", "skills", "projects"],
+      sectionOrder: [
+        "personal",
+        "experience",
+        "education",
+        "skills",
+        "projects",
+      ],
       colorScheme: {
         primary: "#000000",
         secondary: "#666666",
@@ -387,7 +413,7 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
                 className="w-full h-48 p-3 font-mono text-sm border border-gray-200 rounded-md bg-gray-50 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-colors"
               />
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -395,7 +421,10 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
                 </label>
                 <input
                   type="text"
-                  value={preferences.visualElements.customElements?.dividerStyle || ""}
+                  value={
+                    preferences.visualElements.customElements?.dividerStyle ||
+                    ""
+                  }
                   onChange={handleCustomElementsChange}
                   placeholder="e.g., 2px dashed #e2e8f0"
                   className="w-full p-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white placeholder-gray-400 transition-colors"
@@ -407,7 +436,9 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
                 </label>
                 <input
                   type="text"
-                  value={preferences.visualElements.customElements?.iconSet || ""}
+                  value={
+                    preferences.visualElements.customElements?.iconSet || ""
+                  }
                   onChange={handleIconSetChange}
                   placeholder="e.g., material-icons, feather"
                   className="w-full p-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white placeholder-gray-400 transition-colors"
@@ -423,45 +454,47 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
   const handleFreeformChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setFreeformDescription(value);
-    setPreferences(prev => ({
+    setPreferences((prev) => ({
       ...prev,
-      freeformDescription: value
+      freeformDescription: value,
     }));
   };
 
   const handleCustomCSSChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
-    setPreferences(prev => ({
+    setPreferences((prev) => ({
       ...prev,
-      customCSS: value
+      customCSS: value,
     }));
   };
 
-  const handleCustomElementsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCustomElementsChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
-    setPreferences(prev => ({
+    setPreferences((prev) => ({
       ...prev,
       visualElements: {
         ...prev.visualElements,
         customElements: {
           ...prev.visualElements.customElements,
-          dividerStyle: value
-        }
-      }
+          dividerStyle: value,
+        },
+      },
     }));
   };
 
   const handleIconSetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setPreferences(prev => ({
+    setPreferences((prev) => ({
       ...prev,
       visualElements: {
         ...prev.visualElements,
         customElements: {
           ...prev.visualElements.customElements,
-          iconSet: value
-        }
-      }
+          iconSet: value,
+        },
+      },
     }));
   };
 
@@ -473,11 +506,16 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" aria-hidden="true" />
+      <div
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm"
+        aria-hidden="true"
+      />
 
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <DialogPanel className="mx-auto w-full max-w-4xl rounded-lg bg-gray-50 shadow-xl 
-                              flex flex-col max-h-[90vh] md:max-h-[80vh]">
+        <DialogPanel
+          className="mx-auto w-full max-w-4xl rounded-lg bg-gray-50 shadow-xl 
+                              flex flex-col max-h-[90vh] md:max-h-[80vh]"
+        >
           <div className="p-4 border-b bg-white rounded-t-lg">
             <DialogTitle className="text-2xl font-semibold text-gray-800">
               {editingTemplate ? "Edit Template" : "Create Custom Template"}
@@ -486,13 +524,13 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
 
           <div className="border-b bg-white">
             <div className="flex">
-              <TabButton 
+              <TabButton
                 active={activeTab === "generate"}
                 onClick={() => setActiveTab("generate")}
               >
                 Generate Template
               </TabButton>
-              <TabButton 
+              <TabButton
                 active={activeTab === "code"}
                 onClick={() => setActiveTab("code")}
               >
@@ -536,8 +574,17 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
                                     hover:bg-green-600 transition-colors flex items-center gap-1"
                           disabled={isLoading}
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                           {isLoading ? "Regenerating..." : "Regenerate"}
                         </button>
@@ -546,8 +593,17 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
                           className="px-3 py-1.5 text-sm bg-gray-500 text-white rounded-md 
                                     hover:bg-gray-600 transition-colors flex items-center gap-1"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                           Clear
                         </button>
@@ -558,7 +614,7 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
                         showLineNumbers
                         customStyle={{
                           margin: 0,
-                          borderRadius: '0.375rem',
+                          borderRadius: "0.375rem",
                           fontSize: "0.875rem",
                         }}
                       >
@@ -569,11 +625,7 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
                 ) : (
                   <>
                     {renderFreeformSection()}
-                    <TemplatePreferencesForm
-                      onSubmit={handleCreateTemplate}
-                      isLoading={isLoading}
-                      initialPreferences={editingTemplate?.preferences}
-                    />
+                    <TemplatePreferencesForm onSubmit={handleCreateTemplate} />
                   </>
                 )}
               </>
@@ -585,32 +637,48 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
                   <button
                     onClick={() => setCodeViewMode("preview")}
                     className={`px-3 py-1.5 text-sm rounded-md transition-colors flex items-center gap-1
-                      ${codeViewMode === "preview"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                      ${
+                        codeViewMode === "preview"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                       }`}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
                       <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                      <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                      <path
+                        fillRule="evenodd"
+                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     Preview
                   </button>
                   <button
                     onClick={() => setCodeViewMode("edit")}
                     className={`px-3 py-1.5 text-sm rounded-md transition-colors flex items-center gap-1
-                      ${codeViewMode === "edit"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                      ${
+                        codeViewMode === "edit"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                       }`}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
                       <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                     </svg>
                     Edit
                   </button>
                 </div>
-                
+
                 {codeViewMode === "preview" ? (
                   <div className="border rounded-md overflow-hidden">
                     <SyntaxHighlighter
@@ -619,9 +687,9 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
                       showLineNumbers
                       customStyle={{
                         margin: 0,
-                        borderRadius: '0.375rem',
+                        borderRadius: "0.375rem",
                         fontSize: "0.875rem",
-                        minHeight: "500px"
+                        minHeight: "500px",
                       }}
                     >
                       {code}
@@ -640,12 +708,21 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
               className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors
                          flex items-center gap-1"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
               </svg>
               Cancel
             </button>
-            
+
             {activeTab === "generate" && !generatedCode ? (
               <button
                 onClick={handleGenerateClick}

@@ -113,7 +113,7 @@ const TemplateGallery: React.FC = () => {
 
   useEffect(() => {
     loadTemplatesFromStorage();
-  }, []);
+  }, [loadTemplatesFromStorage]);
 
   useEffect(() => {
     updateScale();

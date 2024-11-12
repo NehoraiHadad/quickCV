@@ -13,7 +13,6 @@ describe('TemplatePreferencesForm', () => {
     render(
       <TemplatePreferencesForm 
         onSubmit={mockOnSubmit}
-        onCancel={mockOnCancel}
       />
     )
 
@@ -26,7 +25,6 @@ describe('TemplatePreferencesForm', () => {
     render(
       <TemplatePreferencesForm 
         onSubmit={mockOnSubmit}
-        onCancel={mockOnCancel}
       />
     )
 
@@ -49,7 +47,6 @@ describe('TemplatePreferencesForm', () => {
     render(
       <TemplatePreferencesForm 
         onSubmit={mockOnSubmit}
-        onCancel={mockOnCancel}
       />
     )
 

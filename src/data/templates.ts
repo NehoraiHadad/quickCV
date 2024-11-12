@@ -140,11 +140,15 @@ export const createCustomTemplateObject = (customTemplate: CustomTemplate): Temp
           resumeData,
           resumeData.colors || {}
         );
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error rendering custom template:", err);
+        const errorMessage = err instanceof Error ? err.message : 
+                            typeof err === 'string' ? err :
+                            'Unknown error';
+        
         return React.createElement('div', {
           className: 'p-4 text-red-500 border border-red-300 rounded'
-        }, 'Render Error: ' + (err?.message || 'Unknown error'));
+        }, 'Render Error: ' + errorMessage);
       }
     },
     preview: (() => {
@@ -174,11 +178,15 @@ export const createCustomTemplateObject = (customTemplate: CustomTemplate): Temp
           sampleResumeData,
           sampleResumeData.colors || {}
         );
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error rendering custom template preview:", err);
+        const errorMessage = err instanceof Error ? err.message : 
+                            typeof err === 'string' ? err :
+                            'Unknown error';
+        
         return React.createElement('div', {
           className: 'p-4 text-red-500 border border-red-300 rounded'
-        }, 'Preview Error: ' + (err?.message || 'Unknown error'));
+        }, 'Preview Error: ' + errorMessage);
       }
     })(),
   };
