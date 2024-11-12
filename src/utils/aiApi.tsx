@@ -110,7 +110,9 @@ const makeApiRequest = async (
         ],
       });
 
-      return response.content[0].text;
+      return response.content[0].type === "text"
+        ? response.content[0].text
+        : "";
     } catch (error) {
       console.error("Anthropic API error:", error);
       throw error;
