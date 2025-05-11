@@ -19,7 +19,7 @@ const ContentOptimization: React.FC<ContentOptimizationProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const { resumeData } = useResume();
-  const { apiKey, service } = useAIApi();
+  const { apiKey, service, currentModel } = useAIApi();
 
   const handleOptimize = async () => {
     setIsOptimizing(true);
@@ -36,7 +36,8 @@ const ContentOptimization: React.FC<ContentOptimizationProps> = ({
         initialText,
         field,
         context,
-        "optimize"
+        "optimize",
+        currentModel || undefined
       );
       setSuggestions(response);
     } catch (err) {

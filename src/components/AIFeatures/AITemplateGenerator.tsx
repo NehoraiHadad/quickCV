@@ -99,7 +99,8 @@ type AITemplateResponse =
 export const AITemplateGenerator = async (
   preferences: TemplatePreferences,
   apiKey: string,
-  service: string
+  service: string,
+  specificModel?: string
 ): Promise<AITemplateResponse> => {
   try {
     if (!apiKey || !service) {
@@ -113,7 +114,8 @@ export const AITemplateGenerator = async (
       "template",
       JSON.stringify(preferences),
       prompt,
-      "generate"
+      "generate",
+      specificModel
     );
     
     if (!response || !response[0]) {

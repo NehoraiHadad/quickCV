@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { AI_MODELS } from "./aiModelConfig";
 
 const API_ENDPOINTS = {
   openai: "https://api.openai.com/v1/chat/completions",
@@ -7,11 +8,66 @@ const API_ENDPOINTS = {
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
 };
 
-const AI_MODELS = {
-  openai: "gpt-4o",
-  anthropic: "claude-3-5-sonnet-20241022",
-  groq: "llama-3.1-70b-versatile",
-  google: "gemini-1.5-flash-002",
+// Cache for model availability results
+const modelAvailabilityCache: Record<string, Record<string, string>> = {};
+
+// Get available model for a service with an option to specify a model directly
+const getAvailableModel = async (
+  service: string, 
+  apiKey: string, 
+  specificModel?: string
+): Promise<string> => {
+  // If a specific model is requested, use it directly
+  if (specificModel) {
+    cacheModelAvailability(service, apiKey, specificModel);
+    return specificModel;
+  }
+  
+  // Return from cache if available
+  if (modelAvailabilityCache[service]?.[apiKey]) {
+    return modelAvailabilityCache[service][apiKey];
+  }
+
+  const config = AI_MODELS[service];
+  if (!config) {
+    throw new Error(`Service ${service} is not supported`);
+  }
+
+  // Check if preferred model is available
+  if (config.isAvailable) {
+    try {
+      const isPreferredAvailable = await config.isAvailable(apiKey);
+      if (isPreferredAvailable) {
+        cacheModelAvailability(service, apiKey, config.preferred);
+        return config.preferred;
+      }
+    } catch (error) {
+      console.error("Error checking model availability:", error);
+      // Fall through to fallbacks
+    }
+  }
+
+  // For now, just return the preferred model as default
+  // (fallback logic will be implemented in the API request functions)
+  cacheModelAvailability(service, apiKey, config.preferred);
+  return config.preferred;
+};
+
+// Cache model availability results
+export const cacheModelAvailability = (service: string, apiKey: string, model: string) => {
+  if (!modelAvailabilityCache[service]) {
+    modelAvailabilityCache[service] = {};
+  }
+  modelAvailabilityCache[service][apiKey] = model;
+  
+  // Update localStorage to inform other components
+  localStorage.setItem("aiCurrentModel", model);
+  
+  // Dispatch an event so other components can update
+  const event = new CustomEvent("aiModelChanged", { 
+    detail: { service, model } 
+  });
+  window.dispatchEvent(event);
 };
 
 const FIELD_PROMPTS = {
@@ -43,10 +99,12 @@ const createHeaders = (apiKey: string, service: string) => {
   return headers;
 };
 
-const createRequestBody = (
+const createRequestBody = async (
   service: string,
   systemPrompt: string,
-  userPrompt: string
+  userPrompt: string,
+  apiKey: string,
+  specificModel?: string
 ) => {
   if (userPrompt.includes("Create a resume template")) {
     systemPrompt = `You are a professional UI/UX designer and React developer specializing in creating beautiful, modern resume templates. 
@@ -61,11 +119,14 @@ const createRequestBody = (
     ${systemPrompt}`;
   }
 
+  // Get an available model for the service
+  const modelToUse = await getAvailableModel(service, apiKey, specificModel);
+
   switch (service) {
     case "openai":
     case "groq":
       return JSON.stringify({
-        model: AI_MODELS[service as keyof typeof AI_MODELS],
+        model: modelToUse,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -87,7 +148,8 @@ const makeApiRequest = async (
   apiKey: string,
   service: string,
   systemPrompt: string,
-  userPrompt: string
+  userPrompt: string,
+  specificModel?: string
 ) => {
   if (service === "anthropic") {
     const anthropic = new Anthropic({
@@ -95,9 +157,12 @@ const makeApiRequest = async (
       dangerouslyAllowBrowser: true,
     });
 
+    // Get the best available model for Anthropic
+    const modelToUse = await getAvailableModel(service, apiKey, specificModel);
+    
     try {
       const response = await anthropic.messages.create({
-        model: AI_MODELS.anthropic,
+        model: modelToUse,
         max_tokens: 4096,
         messages: [
           { role: "user", content: systemPrompt },
@@ -113,44 +178,117 @@ const makeApiRequest = async (
       return response.content[0].type === "text"
         ? response.content[0].text
         : "";
-    } catch (error) {
+    } catch (error: unknown) {
+      // If the model is not available, try the fallback models
+      const typedError = error as { status?: number; message?: string };
+      if (typedError.status === 404 || typedError.message?.includes("model")) {
+        const config = AI_MODELS[service];
+        // Try fallback models
+        for (const fallbackModel of config.fallbacks) {
+          try {
+            const response = await anthropic.messages.create({
+              model: fallbackModel,
+              max_tokens: 4096,
+              messages: [
+                { role: "user", content: systemPrompt },
+                {
+                  role: "assistant",
+                  content: "I understand. I'll help with that.",
+                },
+                { role: "user", content: userPrompt },
+              ],
+            });
+            
+            // If successful, cache this model for future use
+            cacheModelAvailability(service, apiKey, fallbackModel);
+            
+            return response.content[0].type === "text"
+              ? response.content[0].text
+              : "";
+          } catch (fallbackError) {
+            // Continue to the next fallback model
+            console.error(`Fallback model ${fallbackModel} failed:`, fallbackError);
+          }
+        }
+      }
+      
       console.error("Anthropic API error:", error);
       throw error;
     }
   }
 
   const headers = createHeaders(apiKey, service);
-  const body = createRequestBody(service, systemPrompt, userPrompt);
+  const body = await createRequestBody(service, systemPrompt, userPrompt, apiKey, specificModel);
   const url =
     service === "google"
       ? `${API_ENDPOINTS[service]}?key=${apiKey}`
       : API_ENDPOINTS[service as keyof typeof API_ENDPOINTS];
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: headers,
-    body: body,
-  });
+  try {
+    let response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: body,
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
-    throw new Error(
-      `HTTP error! status: ${response.status}${
-        errorData ? `, message: ${JSON.stringify(errorData)}` : ""
-      }`
-    );
-  }
+    // Handle model not found error (try fallbacks)
+    if (!response.ok && (response.status === 404 || response.status === 400)) {
+      const errorText = await response.text();
+      const isModelError = errorText.includes("model") || errorText.includes("not found");
+      
+      if (isModelError && service !== "google") {
+        const config = AI_MODELS[service];
+        
+        // Try each fallback model
+        for (const fallbackModel of config.fallbacks) {
+          const fallbackBody = JSON.stringify({
+            ...JSON.parse(body),
+            model: fallbackModel
+          });
+          
+          try {
+            response = await fetch(url, {
+              method: "POST",
+              headers: headers,
+              body: fallbackBody,
+            });
+            
+            if (response.ok) {
+              // If successful, cache this model for future use
+              cacheModelAvailability(service, apiKey, fallbackModel);
+              break;
+            }
+          } catch (fallbackError) {
+            // Continue to the next fallback
+            console.error(`Fallback model ${fallbackModel} failed:`, fallbackError);
+          }
+        }
+      }
+    }
 
-  const data = await response.json();
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(
+        `HTTP error! status: ${response.status}${
+          errorData ? `, message: ${JSON.stringify(errorData)}` : ""
+        }`
+      );
+    }
 
-  switch (service) {
-    case "openai":
-    case "groq":
-      return data.choices[0].message.content.trim();
-    case "google":
-      return data.candidates[0].content.parts[0].text.trim();
-    default:
-      throw new Error("Unsupported AI service");
+    const data = await response.json();
+
+    switch (service) {
+      case "openai":
+      case "groq":
+        return data.choices[0].message.content.trim();
+      case "google":
+        return data.candidates[0].content.parts[0].text.trim();
+      default:
+        throw new Error("Unsupported AI service");
+    }
+  } catch (error) {
+    console.error(`API request failed for service ${service}:`, error);
+    throw error;
   }
 };
 
@@ -160,7 +298,8 @@ export const generateAIContent = async (
   text: string,
   field: string,
   context: string,
-  operation: "suggest" | "optimize" | "grammar" | "generate"
+  operation: "suggest" | "optimize" | "grammar" | "generate",
+  specificModel?: string
 ): Promise<string[]> => {
   let systemPrompt =
     "You are an AI assistant specializing in resume optimization.";
@@ -342,17 +481,18 @@ Generate the template code now:`;
   }
 
   try {
-    const response = await makeApiRequest(
+    const suggestions = await makeApiRequest(
       apiKey,
       service,
       systemPrompt,
-      userPrompt
+      userPrompt,
+      specificModel
     );
-    console.log(response);
+    console.log(suggestions);
 
     return operation === "grammar" || operation === "generate"
-      ? [response]
-      : response.split("|||").map((suggestion: string) => suggestion.trim());
+      ? [suggestions]
+      : suggestions.split("|||").map((suggestion: string) => suggestion.trim());
   } catch (error) {
     console.error(`Error in ${operation} operation:`, error);
     throw error;
@@ -361,7 +501,8 @@ Generate the template code now:`;
 
 export const validateApiKey = async (
   apiKey: string,
-  service: string
+  service: string,
+  specificModel?: string
 ): Promise<boolean> => {
   try {
     if (service === "anthropic") {
@@ -370,18 +511,53 @@ export const validateApiKey = async (
         dangerouslyAllowBrowser: true,
       });
 
-      // Try a simple test message
-      const response = await anthropic.messages.create({
-        model: AI_MODELS.anthropic,
-        max_tokens: 1024,
-        messages: [{ role: "user", content: "Test" }],
-      });
-
-      return !!response;
+      // Try to get an available model
+      try {
+        const modelToUse = specificModel || await getAvailableModel(service, apiKey);
+        
+        // Try a simple test message
+        const testResult = await anthropic.messages.create({
+          model: modelToUse,
+          max_tokens: 1024,
+          messages: [{ role: "user", content: "Test" }],
+        });
+        
+        return !!testResult;
+      } catch (error: unknown) {
+        // If the specific model fails, don't try fallbacks if a model was explicitly specified
+        if (specificModel) {
+          console.error(`Specified model ${specificModel} failed:`, error);
+          return false;
+        }
+        
+        // If the preferred model fails, try fallbacks
+        const typedError = error as { status?: number; message?: string };
+        if (typedError.status === 404 || typedError.message?.includes("model")) {
+          for (const fallbackModel of AI_MODELS.anthropic.fallbacks) {
+            try {
+              await anthropic.messages.create({
+                model: fallbackModel,
+                max_tokens: 1024,
+                messages: [{ role: "user", content: "Test" }],
+              });
+              
+              // If successful, cache this model for future use
+              cacheModelAvailability(service, apiKey, fallbackModel);
+              return true;
+            } catch (fallbackError) {
+              // Continue to the next fallback
+              console.error(`Fallback model ${fallbackModel} validation failed:`, fallbackError);
+            }
+          }
+        }
+        // If all fallbacks fail, return false
+        return false;
+      }
     }
 
-    const response = await makeApiRequest(apiKey, service, "Test", "Test");
-    return !!response;
+    // For other services, use the makeApiRequest with integrated fallbacks
+    const result = await makeApiRequest(apiKey, service, "Test", "Test", specificModel);
+    return !!result;
   } catch (error) {
     console.error("Error validating API key:", error);
     return false;

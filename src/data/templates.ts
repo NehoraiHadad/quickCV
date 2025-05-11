@@ -4,6 +4,7 @@ import { ResumeData } from "@/types/resume";
 import DefaultTemplate from "@/components/Templates/DefaultTemplate";
 import ModernTemplate from "@/components/Templates/ModernTemplate";
 import CleanCardTemplate from "@/components/Templates/CleanCardTemplate";
+import MinimalTemplate from "@/components/Templates/MinimalTemplate";
 import { CustomTemplate } from "@/types/templates";
 
 export const sampleResumeData: ResumeData = {
@@ -112,6 +113,15 @@ const templates: Template[] = [
     render: (resumeData: ResumeData) =>
       React.createElement(CleanCardTemplate, { resumeData }),
     preview: React.createElement(CleanCardTemplate, {
+      resumeData: sampleResumeData,
+    }),
+  },
+  {
+    id: "minimal",
+    name: "Minimal",
+    render: (resumeData: ResumeData) =>
+      React.createElement(MinimalTemplate, { resumeData }),
+    preview: React.createElement(MinimalTemplate, {
       resumeData: sampleResumeData,
     }),
   },

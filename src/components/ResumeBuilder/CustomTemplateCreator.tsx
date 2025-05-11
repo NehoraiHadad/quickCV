@@ -224,7 +224,7 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const [freeformDescription, setFreeformDescription] = useState("");
 
-  const { apiKey, service } = useAIApi();
+  const { apiKey, service, currentModel } = useAIApi();
 
   // Load editing template data when available
   useEffect(() => {
@@ -257,7 +257,8 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
       const response = await AITemplateGenerator(
         enrichedPrefs,
         apiKey,
-        service
+        service,
+        currentModel || undefined
       );
 
       const cleanedCode = cleanGeneratedCode(response.templateCode);

@@ -19,7 +19,7 @@ const ContentSuggestions: React.FC<ContentSuggestionsProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const { resumeData } = useResume();
-  const { apiKey, service } = useAIApi();
+  const { apiKey, service, currentModel } = useAIApi();
 
   const handleSuggest = async () => {
     setIsSuggesting(true);
@@ -36,7 +36,8 @@ const ContentSuggestions: React.FC<ContentSuggestionsProps> = ({
         initialText,
         field,
         context,
-        "suggest"
+        "suggest",
+        currentModel || undefined
       );
       setSuggestions(response);
     } catch (err) {

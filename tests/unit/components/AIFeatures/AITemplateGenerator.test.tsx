@@ -14,6 +14,7 @@ describe('AITemplateGenerator', () => {
 
   const mockApiKey = 'test-key'
   const mockService = 'openai'
+  const mockModel = 'gpt-4o'
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -30,10 +31,19 @@ describe('AITemplateGenerator', () => {
 
     ;(generateAIContent as jest.Mock).mockResolvedValueOnce([mockTemplateCode])
 
-    const result = await AITemplateGenerator(mockPreferences, mockApiKey, mockService)
+    const result = await AITemplateGenerator(mockPreferences, mockApiKey, mockService, mockModel)
 
     expect(result.success).toBe(true)
     expect(result.templateCode).toContain('React.createElement')
+    expect(generateAIContent).toHaveBeenCalledWith(
+      mockApiKey,
+      mockService,
+      "template",
+      expect.any(String),
+      expect.any(String),
+      "generate",
+      mockModel
+    )
   })
 
   it('handles missing API credentials', async () => {

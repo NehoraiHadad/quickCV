@@ -19,7 +19,7 @@ const GrammarCheck: React.FC<GrammarCheckProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const { resumeData } = useResume();
-  const { apiKey, service } = useAIApi();
+  const { apiKey, service, currentModel } = useAIApi();
 
   const handleCheck = async () => {
     setIsChecking(true);
@@ -36,7 +36,8 @@ const GrammarCheck: React.FC<GrammarCheckProps> = ({
         initialText,
         field,
         context,
-        "grammar"
+        "grammar",
+        currentModel || undefined
       );
       setSuggestions(response);
     } catch (err) {
