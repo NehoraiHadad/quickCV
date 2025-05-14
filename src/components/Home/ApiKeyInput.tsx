@@ -1,8 +1,15 @@
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { validateApiKey } from "@/utils/aiApi";
 import ModelInfoDisplay from "./ModelInfoDisplay";
-import { useAIApi } from "@/hooks/useAIApi";
+import useAIApi from "@/hooks/useAIApi";
+import { 
+  FormInput, 
+  ResponsiveStack, 
+  Button, 
+  Card,
+  ResponsiveContainer
+} from "@/components/ui";
 
 export default function ApiKeyInput() {
   const [apiKey, setApiKey] = useState("");
@@ -69,70 +76,82 @@ export default function ApiKeyInput() {
   };
 
   return (
-    <div className="mb-6">
-      <form onSubmit={handleSubmit} className="mb-3">
-        <label
-          htmlFor="apiKey"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          Enter your AI API Key
-        </label>
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-          <input
-            type="text"
-            id="apiKey"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            className="flex-grow px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Your API Key"
-          />
-          <div className="flex space-x-2">
-            <select
-              value={service}
-              onChange={handleServiceChange}
-              className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="openai">OpenAI</option>
-              <option value="anthropic">Anthropic</option>
-              <option value="groq">Groq</option>
-              <option value="google">Google AI</option>
-            </select>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 whitespace-nowrap"
-              disabled={isValidating}
-            >
-              {isValidating ? "Validating..." : "Validate"}
-            </button>
-          </div>
-        </div>
-        
-        {validationMessage && (
-          <p
-            className={`mt-2 text-sm ${
-              isValid ? "text-green-600" : "text-red-600"
-            }`}
+    <ResponsiveContainer maxWidth="lg" className="mb-6">
+      <Card>
+        <form onSubmit={handleSubmit} className="mb-3">
+          <label
+            htmlFor="apiKey"
+            className="block text-sm font-medium text-gray-700 mb-2"
           >
-            {validationMessage}
+            Enter your AI API Key
+          </label>
+          
+          <ResponsiveStack 
+            direction="row" 
+            breakpoint="sm" 
+            spacing={2} 
+            alignment="center"
+          >
+            <div className="flex-grow">
+              <FormInput
+                id="apiKey"
+                label=""
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="Your API Key"
+              />
+            </div>
+            
+            <div className="flex space-x-2">
+              <select
+                value={service}
+                onChange={handleServiceChange}
+                className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Anthropic</option>
+                <option value="groq">Groq</option>
+                <option value="google">Google AI</option>
+              </select>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={isValidating}
+              >
+                {isValidating ? "Validating..." : "Validate"}
+              </Button>
+            </div>
+          </ResponsiveStack>
+          
+          {validationMessage && (
+            <p
+              className={`mt-2 text-sm ${
+                isValid ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {validationMessage}
+            </p>
+          )}
+          
+          <p className="mt-2 text-xs text-gray-500">
+            Providing an API key enables advanced AI features. After validation, you can select a specific model to use from each provider.
           </p>
-        )}
-        
-        <p className="mt-2 text-xs text-gray-500">
-          Providing an API key enables advanced AI features. After validation, you can select a specific model to use from each provider.
-        </p>
-        
-        {hasStoredKey && (
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="mt-2 text-sm text-red-600 hover:text-red-800"
-          >
-            Delete API key and settings
-          </button>
-        )}
-      </form>
+          
+          {hasStoredKey && (
+            <Button
+              type="button"
+              onClick={handleDelete}
+              variant="danger"
+              size="sm"
+              className="mt-2"
+            >
+              Delete API key and settings
+            </Button>
+          )}
+        </form>
+      </Card>
       
       {hasStoredKey && <ModelInfoDisplay />}
-    </div>
+    </ResponsiveContainer>
   );
 }

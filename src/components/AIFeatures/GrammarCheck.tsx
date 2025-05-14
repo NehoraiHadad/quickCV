@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { generateAIContent } from "@/utils/aiApi";
-import { useResume } from "@/context/ResumeContext";
-import { useAIApi } from "@/hooks/useAIApi";
+import React, { useState } from 'react';
+import { generateAIContent } from '@/utils/aiApi';
+import { useResume } from '@/context/ResumeContext';
+import { useTranslation } from 'next-i18next';
+import useAIApi from "@/hooks/useAIApi";
 import SuggestionModal from "./SuggestionModal";
 
 interface GrammarCheckProps {
@@ -20,13 +21,14 @@ const GrammarCheck: React.FC<GrammarCheckProps> = ({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const { resumeData } = useResume();
   const { apiKey, service, currentModel } = useAIApi();
+  const { t } = useTranslation();
 
   const handleCheck = async () => {
     setIsChecking(true);
     setError(null);
     try {
       if (!apiKey || !service) {
-        throw new Error("AI API key or service not found");
+        throw new Error(t('aiError.apiKeyOrServiceNotFound'));
       }
       const context = JSON.stringify(resumeData);
 
@@ -41,7 +43,7 @@ const GrammarCheck: React.FC<GrammarCheckProps> = ({
       );
       setSuggestions(response);
     } catch (err) {
-      setError("Failed to check grammar. Please try again.");
+      setError(t('aiError.grammarCheckFailed'));
       console.error(err);
     } finally {
       setIsChecking(false);
@@ -59,7 +61,7 @@ const GrammarCheck: React.FC<GrammarCheckProps> = ({
         onClick={handleCheck}
         disabled={isChecking}
         className="text-blue-600 hover:text-blue-800 focus:outline-none relative"
-        title="Check Grammar"
+        title={t('grammarCheck.title') || "Check Grammar"}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

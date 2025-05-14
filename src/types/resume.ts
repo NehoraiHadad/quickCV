@@ -1,4 +1,3 @@
-// src/types/resume.ts
 export interface PersonalInfo {
   name: string;
   title: string;
@@ -31,9 +30,10 @@ export interface Project {
   id: string;
   name: string;
   description: string;
-  technologies: string;
-  link: string;
-  github: string;
+  technologies?: string;
+  link?: string;
+  github?: string;
+  url?: string;
 }
 
 export interface AdditionalSection {
@@ -42,11 +42,17 @@ export interface AdditionalSection {
   content: string;
 }
 
+export interface Skill {
+  id: string;
+  name: string;
+  level?: string;
+}
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   workExperience: WorkExperience[];
   education: Education[];
-  skills: string[];
+  skills: Skill[];
   projects: Project[];
   additionalSections: AdditionalSection[];
   colors: {
@@ -54,4 +60,14 @@ export interface ResumeData {
     secondary: string;
     accent: string;
   };
+  selectedTemplate: string;
 }
+
+// Create more specific Resume Data type variations for skills
+export type ResumeDataWithStringSkills = Omit<ResumeData, 'skills'> & {
+  skills: string[];
+};
+
+export type ResumeDataWithSkillObjects = Omit<ResumeData, 'skills'> & {
+  skills: Skill[];
+};

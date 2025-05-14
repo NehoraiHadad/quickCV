@@ -1,0 +1,58 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Documentation-First Development Approach
+
+This rule provides guidelines for ensuring high-quality implementation by checking current documentation before coding.
+
+## Using Context7 for Documentation
+
+When implementing features or fixing issues that require knowledge of the following libraries/frameworks, always check the most recent documentation first:
+
+- Next.js - For routing, server components, and application structure
+- Tailwind CSS - For styling and responsive design
+- React - For component patterns and hooks
+- TypeScript - For type definitions and best practices
+- i18next - For internationalization patterns
+- Jest - For testing patterns
+
+## Documentation Workflow
+
+1. **Identify the relevant library/framework** needed for the implementation
+2. **Fetch up-to-date documentation** using Context7 tools
+3. **Study the specific API or feature** documentation before implementing
+4. **Follow official patterns and best practices** from the documentation
+5. **Check for version compatibility** with the project's dependencies in [package.json](mdc:package.json)
+
+## Key Project Dependencies
+
+The project currently uses these main dependencies (check [package.json](mdc:package.json) for the exact versions):
+
+- Next.js for the application framework
+- React for UI components
+- Tailwind CSS for styling
+- TypeScript for type safety
+- i18next for internationalization
+- Jest for testing
+
+## Documentation Resources
+
+Always fetch the most recent documentation using Context7 before implementing complex features, especially for:
+
+- Advanced Next.js features (app router, server components, etc.)
+- Tailwind CSS utilities and responsive design patterns
+- React patterns and hooks usage
+- Form handling and validation
+- Internationalization implementation
+- Testing patterns and best practices
+
+## Implementation Process
+
+1. **Documentation first**: Check the most recent documentation for the library/feature
+2. **Plan implementation** based on official recommendations
+3. **Follow project conventions** along with library best practices
+4. **Implement according to documentation** guidelines
+5. **Test against expected behavior** as described in documentation
+

@@ -28,21 +28,28 @@
 .star-3 {
   opacity: 0;
   transform-origin: center;
+  transition: opacity 0.3s ease;
 }
 
 .group:hover .star-1 {
-  animation: starRise 2s ease-in-out infinite;
-  color: white;
+  animation: starRise 3.5s ease-in-out infinite;
+  animation-delay: 0s;
+  color: #8a2be2;
+  opacity: 1;
 }
 
 .group:hover .star-2 {
-  animation: starRise 2s ease-in-out 0.3s infinite;
-  color: white;
+  animation: starRise 3.5s ease-in-out infinite;
+  animation-delay: 0.5s;
+  color: #9932cc;
+  opacity: 1;
 }
 
 .group:hover .star-3 {
-  animation: starRise 2s ease-in-out 0.6s infinite;
-  color: white;
+  animation: starRise 3.5s ease-in-out infinite;
+  animation-delay: 1s;
+  color: #9400d3;
+  opacity: 1;
 }
 
 .split {

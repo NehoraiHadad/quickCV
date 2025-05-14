@@ -1,11 +1,11 @@
 import React from 'react';
 import TemplateGallery from '@/components/TemplateSelection/TemplateGallery';
+import { ResumeSection } from '@/components/ui';
 
 export default function TemplateSelection() {
   return (
-    <div className="space-y-4 ">
-      <h2 className="text-2xl font-semibold mb-4 text-blue-600">Choose a Template</h2>
+    <ResumeSection title="Choose a Template">
       <TemplateGallery />
-    </div>
+    </ResumeSection>
   );
 }

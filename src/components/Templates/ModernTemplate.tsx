@@ -1,5 +1,5 @@
 import React from "react";
-import { ResumeData } from "@/types/resume";
+import { ResumeData, Skill } from "@/types/resume";
 
 interface ModernTemplateProps {
   resumeData: ResumeData;
@@ -25,6 +25,14 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ resumeData }) => {
 
   // Merge default colors with user-defined colors
   const templateColors = { ...defaultColors, ...colors };
+
+  // Helper function to get skill name
+  const getSkillName = (skill: string | Skill): string => {
+    if (typeof skill === 'string') {
+      return skill;
+    }
+    return skill.name;
+  };
 
   return (
     <div className="mx-auto w-full h-full bg-white p-8 flex flex-col" style={{ color: templateColors.secondary }}>
@@ -124,7 +132,13 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ resumeData }) => {
               <h2 className="text-lg font-semibold mb-2" style={{ borderBottom: `1px solid ${templateColors.primary}`, color: templateColors.primary }}>Skills</h2>
               <ul className="list-disc list-inside">
                 {skills.map((skill, index) => (
-                  <li key={index} className="text-sm" style={{ color: templateColors.secondary }}>{skill}</li>
+                  <li 
+                    key={typeof skill === 'string' ? `skill-${index}` : skill.id || `skill-${index}`} 
+                    className="text-sm" 
+                    style={{ color: templateColors.secondary }}
+                  >
+                    {getSkillName(skill)}
+                  </li>
                 ))}
               </ul>
             </section>

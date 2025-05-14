@@ -1,44 +1,58 @@
-import React, { useState } from "react";
+import React from "react";
 import { TemplatePreferences } from "@/types/templates";
 
 interface TemplatePreferencesFormProps {
-  onSubmit: (preferences: TemplatePreferences) => Promise<void>;
+  preferences: TemplatePreferences;
+  onChange: (preferences: TemplatePreferences) => void;
 }
 
 export default function TemplatePreferencesForm({
-  onSubmit,
+  preferences,
+  onChange,
 }: TemplatePreferencesFormProps) {
-  const [preferences, setPreferences] = useState<TemplatePreferences>({
-    name: "",
-    layout: "single-column",
-    headerStyle: {
-      position: "top",
-      alignment: "left",
-      size: "medium",
-    },
-    sectionOrder: ["personal", "experience", "education", "skills", "projects"],
-    colorScheme: {
-      primary: "#000000",
-      secondary: "#666666",
-      accent: "#0066cc",
-      background: "#ffffff",
-    },
-    visualElements: {
-      useDividers: true,
-      useIcons: false,
-      borderStyle: "solid",
-      useShapes: false,
-    },
-    spacing: "balanced",
-  });
+  // Function to handle any change in the preferences
+  const handleChange = (newValues: Partial<TemplatePreferences>) => {
+    onChange({
+      ...preferences,
+      ...newValues,
+    });
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(preferences);
+  // Update header style properties
+  const updateHeaderStyle = (key: string, value: string | boolean | number | Record<string, string>) => {
+    onChange({
+      ...preferences,
+      headerStyle: {
+        ...preferences.headerStyle,
+        [key]: value,
+      },
+    });
+  };
+
+  // Update color scheme properties
+  const updateColorScheme = (key: string, value: string) => {
+    onChange({
+      ...preferences,
+      colorScheme: {
+        ...preferences.colorScheme,
+        [key]: value,
+      },
+    });
+  };
+
+  // Update visual elements properties
+  const updateVisualElements = (key: string, value: string | boolean | Record<string, unknown>) => {
+    onChange({
+      ...preferences,
+      visualElements: {
+        ...preferences.visualElements,
+        [key]: value,
+      },
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="space-y-6">
       {/* Layout Selection */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -47,10 +61,7 @@ export default function TemplatePreferencesForm({
         <select
           value={preferences.layout}
           onChange={(e) =>
-            setPreferences({
-              ...preferences,
-              layout: e.target.value as TemplatePreferences["layout"],
-            })
+            handleChange({ layout: e.target.value as TemplatePreferences["layout"] })
           }
           className="w-full px-3 py-2 border border-gray-300 rounded-md"
         >
@@ -69,13 +80,7 @@ export default function TemplatePreferencesForm({
           <select
             value={preferences.headerStyle.position}
             onChange={(e) =>
-              setPreferences({
-                ...preferences,
-                headerStyle: {
-                  ...preferences.headerStyle,
-                  position: e.target.value as "top" | "side",
-                },
-              })
+              updateHeaderStyle("position", e.target.value as "top" | "side" | "custom")
             }
             className="px-3 py-2 border border-gray-300 rounded-md"
           >
@@ -85,13 +90,7 @@ export default function TemplatePreferencesForm({
           <select
             value={preferences.headerStyle.alignment}
             onChange={(e) =>
-              setPreferences({
-                ...preferences,
-                headerStyle: {
-                  ...preferences.headerStyle,
-                  alignment: e.target.value as "left" | "center" | "right",
-                },
-              })
+              updateHeaderStyle("alignment", e.target.value as "left" | "center" | "right" | "custom")
             }
             className="px-3 py-2 border border-gray-300 rounded-md"
           >
@@ -117,13 +116,7 @@ export default function TemplatePreferencesForm({
                 type="color"
                 value={value.toString()}
                 onChange={(e) =>
-                  setPreferences({
-                    ...preferences,
-                    colorScheme: {
-                      ...preferences.colorScheme,
-                      [key]: e.target.value,
-                    },
-                  })
+                  updateColorScheme(key, e.target.value)
                 }
                 className="w-full h-8 rounded-md"
               />
@@ -143,13 +136,7 @@ export default function TemplatePreferencesForm({
               type="checkbox"
               checked={preferences.visualElements.useDividers}
               onChange={(e) =>
-                setPreferences({
-                  ...preferences,
-                  visualElements: {
-                    ...preferences.visualElements,
-                    useDividers: e.target.checked,
-                  },
-                })
+                updateVisualElements("useDividers", e.target.checked)
               }
               className="rounded text-blue-600"
             />
@@ -160,13 +147,7 @@ export default function TemplatePreferencesForm({
               type="checkbox"
               checked={preferences.visualElements.useIcons}
               onChange={(e) =>
-                setPreferences({
-                  ...preferences,
-                  visualElements: {
-                    ...preferences.visualElements,
-                    useIcons: e.target.checked,
-                  },
-                })
+                updateVisualElements("useIcons", e.target.checked)
               }
               className="rounded text-blue-600"
             />
@@ -174,6 +155,6 @@ export default function TemplatePreferencesForm({
           </label>
         </div>
       </div>
-    </form>
+    </div>
   );
 }

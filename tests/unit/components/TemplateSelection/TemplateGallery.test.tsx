@@ -9,9 +9,18 @@ import templates from '@/data/templates'
 jest.mock('@/context/ResumeContext')
 jest.mock('@/hooks/useCustomTemplates')
 jest.mock('@/hooks/useResumeData')
-jest.mock('@/components/ResumeBuilder/CustomTemplateCreator', () => {
-  return function MockCustomTemplateCreator({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-    return isOpen ? <div role="dialog" data-testid="mock-creator" onClick={onClose}>Mock Creator</div> : null
+jest.mock('@/components/ResumeBuilder/CustomTemplateCreatorWrapper', () => {
+  return function MockCustomTemplateCreatorWrapper({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+    return isOpen ? (
+      <div role="dialog" data-testid="mock-creator">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" aria-hidden="true" />
+        <div className="fixed inset-0 w-screen overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div className="z-10 bg-white rounded-xl" onClick={onClose}>Mock Creator</div>
+          </div>
+        </div>
+      </div>
+    ) : null
   }
 })
 
@@ -91,7 +100,7 @@ describe('TemplateGallery', () => {
   it('opens template creator when clicking create button', () => {
     render(<TemplateGallery />)
 
-    const createButton = screen.getByText('Create Custom Template')
+    const createButton = screen.getByText('Create Template')
     fireEvent.click(createButton)
 
     expect(screen.getByTestId('mock-creator')).toBeInTheDocument()

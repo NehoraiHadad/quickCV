@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { generateAIContent } from "@/utils/aiApi";
 import { useResume } from "@/context/ResumeContext";
-import { useAIApi } from "@/hooks/useAIApi";
+import useAIApi from "@/hooks/useAIApi";
 import SuggestionModal from "./SuggestionModal";
 
 interface ContentOptimizationProps {

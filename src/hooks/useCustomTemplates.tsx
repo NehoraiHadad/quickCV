@@ -16,7 +16,7 @@ interface UseCustomTemplatesReturn {
   loadTemplatesFromStorage: () => Promise<void>;
 }
 
-export const useCustomTemplates = (): UseCustomTemplatesReturn => {
+const useCustomTemplates = (): UseCustomTemplatesReturn => {
   const [customTemplates, setCustomTemplates] = useState<Template[]>([]);
   const templatesRef = useRef<Template[]>([]);
 
@@ -223,3 +223,5 @@ export const useCustomTemplates = (): UseCustomTemplatesReturn => {
     loadTemplatesFromStorage,
   };
 };
+
+export default useCustomTemplates;

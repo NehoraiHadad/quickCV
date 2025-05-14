@@ -5,6 +5,7 @@ import {
   Education,
   Project,
   AdditionalSection,
+  Skill
 } from "@/types/resume";
 
 export const useResumeData = () => {
@@ -27,9 +28,8 @@ export const useResumeData = () => {
       secondary: "",
       accent: "",
     },
+    selectedTemplate: "default",
   });
-
-  const [selectedTemplate, setSelectedTemplate] = useState("default");
 
   const updatePersonalInfo = (info: Partial<ResumeData["personalInfo"]>) => {
     setResumeData((prev) => ({
@@ -90,16 +90,27 @@ export const useResumeData = () => {
   };
 
   const addSkill = (skill: string) => {
+    const newSkill: Skill = {
+      id: Date.now().toString(),
+      name: skill
+    };
+    
     setResumeData((prev) => ({
       ...prev,
-      skills: [...prev.skills, skill],
+      skills: [...prev.skills, newSkill],
     }));
   };
 
-  const removeSkill = (skill: string) => {
+  const removeSkill = (skillToRemove: string | Skill) => {
     setResumeData((prev) => ({
       ...prev,
-      skills: prev.skills.filter((s) => s !== skill),
+      skills: prev.skills.filter((skill) => {
+        if (typeof skillToRemove === 'string') {
+          return skill.name !== skillToRemove;
+        } else {
+          return skill.id !== skillToRemove.id;
+        }
+      }),
     }));
   };
 
@@ -156,9 +167,16 @@ export const useResumeData = () => {
     }));
   };
 
+  const setSelectedTemplate = (template: string) => {
+    setResumeData((prev) => ({
+      ...prev,
+      selectedTemplate: template,
+    }));
+  };
+
   return {
     resumeData,
-    selectedTemplate,
+    selectedTemplate: resumeData.selectedTemplate,
     setSelectedTemplate,
     updatePersonalInfo,
     addWorkExperience,

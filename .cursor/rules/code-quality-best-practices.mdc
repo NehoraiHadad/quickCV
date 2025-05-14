@@ -1,0 +1,58 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Code Quality Best Practices
+
+This rule provides guidelines for maintaining high-quality code across the QuickCV project.
+
+## DRY (Don't Repeat Yourself)
+- Avoid code duplication
+- Extract common functionality into reusable components, hooks, or utilities
+- Look for opportunities to create shared helper functions in [src/utils](mdc:src/utils)
+- For UI components, create reusable components in [src/components](mdc:src/components)
+
+## File Size and Structure
+- Keep files under 150 lines of code
+- Split large components into smaller, focused sub-components
+- Each file should have a single responsibility/purpose
+- If a component grows too complex, consider breaking it down
+
+## Modern Syntax and Patterns
+- Use ES6+ syntax features (arrow functions, destructuring, etc.)
+- Use functional components with React hooks instead of class components
+- Prefer async/await over Promise chains
+- Use optional chaining (?.) and nullish coalescing (??) operators where appropriate
+- For TypeScript, use type inference where possible, but provide explicit types for function parameters and returns
+
+## Component Structure
+- Keep components focused on a single responsibility
+- Extract complex logic into custom hooks in [src/hooks](mdc:src/hooks)
+- Follow the React hooks rules (don't call hooks conditionally)
+- For AI-related logic, use the utilities in [src/utils/ai](mdc:src/utils/ai)
+
+## State Management
+- Keep state as local as possible
+- For shared state, use context providers in [src/context](mdc:src/context)
+- Use reducers for complex state logic
+- Consider using state machines for complex UI flows
+
+## Performance
+- Memoize expensive calculations using useMemo and useCallback
+- Use React.memo for pure components
+- Avoid unnecessary re-renders
+- Use optimized list rendering with proper key props
+
+## Testing
+- Write tests for all new components and utilities
+- Place tests in the corresponding directory structure in [tests](mdc:tests)
+- Test both happy and error paths
+- Mock external dependencies
+
+## Accessibility
+- Ensure all components are accessible
+- Use semantic HTML elements
+- Provide alt text for images
+- Ensure proper keyboard navigation
+

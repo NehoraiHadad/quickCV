@@ -48,7 +48,14 @@ export const sampleResumeData: ResumeData = {
       description: "Focused on software engineering and data structures.",
     },
   ],
-  skills: ["JavaScript", "React", "Node.js", "Python", "AWS", "Docker"],
+  skills: [
+    { id: "skill-1", name: "JavaScript" },
+    { id: "skill-2", name: "React" },
+    { id: "skill-3", name: "Node.js" },
+    { id: "skill-4", name: "Python" },
+    { id: "skill-5", name: "AWS" },
+    { id: "skill-6", name: "Docker" }
+  ],
   projects: [
     {
       id: "1",
@@ -86,6 +93,7 @@ export const sampleResumeData: ResumeData = {
     secondary: "#144790",
     accent: "#6175db",
   },
+  selectedTemplate: "default"
 };
 
 const templates: Template[] = [

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PersonalInfo from "@/components/ResumeBuilder/PersonalInfo";
 import WorkExperience from "@/components/ResumeBuilder/WorkExperience";
 import Education from "@/components/ResumeBuilder/Education";
@@ -8,39 +8,23 @@ import Projects from "@/components/ResumeBuilder/Projects";
 import AdditionalSections from "@/components/ResumeBuilder/AdditionalSections";
 import TemplateSelection from "@/components/ResumeBuilder/TemplateSelection";
 import ResumePreview from "@/components/ResumeBuilder/ResumePreview";
-import { ResumeProvider, useResume } from "@/context/ResumeContext";
 import ColorCustomization from "@/components/ResumeBuilder/ColorCustomization";
-import Image from "next/image";
 import Split from 'react-split';
+import { Button } from "@/components/ui";
+import { useSearchParams } from "next/navigation";
 
 const ResumeBuilderContent: React.FC = () => {
   const [currentSection, setCurrentSection] = useState("personal-info");
-  const { saveResumeData, loadResumeData } = useResume();
-  const [isNavOpen, setIsNavOpen] = useState(false);
   const [mobileView, setMobileView] = useState<"main" | "aside">("main");
-
-  const handleSaveData = () => {
-    const jsonData = saveResumeData();
-    const blob = new Blob([jsonData], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "resume_data.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const handleLoadData = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        loadResumeData(content);
-      };
-      reader.readAsText(file);
+  const searchParams = useSearchParams();
+  
+  // Get the section from URL query parameter
+  useEffect(() => {
+    const sectionParam = searchParams.get("section");
+    if (sectionParam) {
+      setCurrentSection(sectionParam);
     }
-  };
+  }, [searchParams]);
 
   const renderSection = () => {
     switch (currentSection) {
@@ -60,189 +44,55 @@ const ResumeBuilderContent: React.FC = () => {
         return <TemplateSelection />;
       case "colors":
         return <ColorCustomization />;
+      case "preview":
+        return <div className="p-4 h-full overflow-auto"><ResumePreview fullPage /></div>;
       default:
         return null;
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-blue-600 text-white py-4 px-6 shadow flex justify-between items-center z-30 relative">
-        <h1 className="text-2xl font-bold">Build Your Resume</h1>
-        <button
-          className="md:hidden p-2 hover:bg-blue-700 rounded-lg transition-colors duration-300"
-          onClick={() => setIsNavOpen(!isNavOpen)}
+    <div className="flex flex-col md:flex-row h-full">
+      <div className="md:hidden flex-1 flex flex-col">
+        <main className={`flex-1 p-4 overflow-y-auto ${mobileView === "main" ? "block" : "hidden"}`}>
+          {renderSection()}
+        </main>
+        <aside className={`w-full p-4 overflow-y-auto bg-gray-100 ${mobileView === "aside" ? "block" : "hidden"}`}>
+          <ResumePreview />
+        </aside>
+      </div>
+      
+      <div className="hidden md:block flex-1">
+        <Split
+          className="flex flex-row h-full"
+          sizes={[60, 40]}
+          minSize={300}
+          gutterSize={8}
+          snapOffset={30}
         >
-          {isNavOpen ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
-          )}
-        </button>
-      </header>
-      <div className="flex-1 flex flex-col md:flex-row relative max-h-[91.27vh]">
-        <nav
-          className={`w-full md:w-48 bg-gray-100 p-4 overflow-y-auto fixed md:static inset-0 z-20 ${
-            isNavOpen ? "block" : "hidden"
-          } md:flex pt-20 md:pt-4 flex flex-col`}
-        >
-          <ul className="space-y-2">
-            {[
-              "personal-info",
-              "work-experience",
-              "education",
-              "skills",
-              "projects",
-              "additional",
-              "template",
-              "colors",
-            ].map((section) => (
-              <li key={section}>
-                <button
-                  onClick={() => {
-                    setCurrentSection(section);
-                    setIsNavOpen(false);
-                    setMobileView("main");
-                  }}
-                  className={`w-full text-left py-2 px-4 rounded transition-colors duration-300 ${
-                    currentSection === section
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-gray-800 hover:bg-gray-200"
-                  }`}
-                >
-                  {section
-                    .split("-")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ")}
-                </button>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-4 flex space-x-2">
-            <button
-              onClick={handleSaveData}
-              className="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition-colors duration-300 "
-            >
-              Save Data
-            </button>
-            <label className="bg-blue-500 text-center text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300 cursor-pointer">
-              Load Data
-              <input
-                type="file"
-                accept=".json"
-                onChange={handleLoadData}
-                className="hidden"
-              />
-            </label>
-          </div>
-          <div className="mt-auto flex flex-col-reverse justify-center items-center">
-            <a href="/">
-              <Image
-                src="/images/logo.png"
-                alt="QuickCV Logo"
-                width={100}
-                height={35}
-                className="inline-block mt-2 "
-              />
-            </a>
-            <a
-              href="https://github.com/NehoraiHadad/quickCV"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-600 hover:text-gray-900 transition-colors duration-300"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </a>
-          </div>
-        </nav>
-        <div className="md:hidden flex-1 flex flex-col">
-          <main className={`flex-1 p-4 overflow-y-auto ${mobileView === "main" ? "block" : "hidden"}`}>
+          <main className="flex-1 p-4 overflow-y-auto resume-preview-scroll">
             {renderSection()}
           </main>
-          <aside className={`w-full p-4 overflow-y-auto bg-gray-100 ${mobileView === "aside" ? "block" : "hidden"}`}>
+          <aside className="w-full md:w-2/4 p-4 overflow-y-auto bg-gray-100 resume-preview-scroll">
             <ResumePreview />
           </aside>
-        </div>
-        <div className="hidden md:block flex-1">
-          <Split
-            className="flex flex-row h-full"
-            sizes={[60, 40]}
-            minSize={300}
-            gutterSize={8}
-            snapOffset={30}
-          >
-            <main
-              className={`flex-1 p-4 overflow-y-auto resume-preview-scroll ${
-                mobileView === "main" ? "block" : "hidden"
-              } md:block`}
-            >
-              {renderSection()}
-            </main>
-            <aside
-              className={`w-full md:w-2/4 p-4 overflow-y-auto bg-gray-100 resume-preview-scroll ${
-                mobileView === "aside" ? "block" : "hidden"
-              } md:block`}
-            >
-              <ResumePreview />
-            </aside>
-          </Split>
-        </div>
-        <div className="md:hidden fixed bottom-4 right-4 flex space-x-2 z-30">
-          <button
-            onClick={() =>
-              setMobileView(mobileView === "main" ? "aside" : "main")
-            }
-            className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-md"
-          >
-            {mobileView === "main" ? "Preview" : "Edit"}
-          </button>
-        </div>
+        </Split>
+      </div>
+      
+      <div className="md:hidden fixed bottom-4 right-4 flex space-x-2 z-30">
+        <Button
+          onClick={() => setMobileView(mobileView === "main" ? "aside" : "main")}
+          variant="primary"
+          size="md"
+          className="rounded-full shadow-lg"
+        >
+          {mobileView === "main" ? "Preview" : "Edit"}
+        </Button>
       </div>
     </div>
   );
 };
 
 export default function ResumeBuilder() {
-  return (
-    <ResumeProvider>
-      <ResumeBuilderContent />
-    </ResumeProvider>
-  );
+  return <ResumeBuilderContent />;
 }

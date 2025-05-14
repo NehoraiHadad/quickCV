@@ -1,0 +1,57 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Architecture Guidelines
+
+This rule provides guidelines for maintaining a consistent project architecture in the QuickCV application.
+
+## Directory Structure
+- Follow the established directory structure
+- The main application code is in [src](mdc:src)
+- UI components should be placed in [src/components](mdc:src/components)
+- Template components should be placed in [src/components/Templates](mdc:src/components/Templates)
+- Global hooks should be in [src/hooks](mdc:src/hooks)
+- Utilities should be in [src/utils](mdc:src/utils)
+- Types should be in [src/types](mdc:src/types)
+- Context providers should be in [src/context](mdc:src/context)
+
+## Module Organization
+- Group related functionality into modules
+- Keep imports organized (React imports first, then external libraries, then internal modules)
+- Import from the module's index file, not directly from the implementation files
+- Use relative imports for files in the same module
+- Use absolute imports for cross-module references
+
+## Feature Organization
+- Organize code by feature when possible
+- Keep feature-specific components, hooks, and utilities close to the feature
+- For cross-cutting concerns, use the appropriate global directories
+
+## API Integration
+- Keep API service functions in [src/services](mdc:src/services)
+- AI-specific API handlers should be in [src/services/ai](mdc:src/services/ai)
+- Use the API endpoints defined in [src/app/api](mdc:src/app/api)
+
+## Internationalization
+- Use the internationalization framework defined in [src/i18n](mdc:src/i18n)
+- Store translations in [src/i18n/locales](mdc:src/i18n/locales)
+- Support the language route parameter with [language] in the URL
+
+## Templates
+- All resume templates should be in [src/components/Templates](mdc:src/components/Templates)
+- Each template should have its own directory
+- Template logic should be separated from presentation
+- Use the template utilities in [src/utils/template](mdc:src/utils/template)
+
+## AI Integration
+- AI-related functionality should use the utilities in [src/utils/ai](mdc:src/utils/ai)
+- AI prompt templates should be in [src/promptTemplates](mdc:src/promptTemplates)
+- AI service functions should be in [src/services/ai](mdc:src/services/ai)
+
+## Testing
+- Maintain a parallel directory structure for tests in [tests](mdc:tests)
+- Unit tests should be in [tests/unit](mdc:tests/unit)
+- Mock data and fixtures should be in [__mocks__](mdc:__mocks__)
+

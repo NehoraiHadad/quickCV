@@ -12,7 +12,7 @@ export interface ModelInfo {
   };
 }
 
-export const useAIApi = () => {
+const useAIApi = () => {
   const [apiKey, setApiKeyState] = useState<string>('');
   const [service, setServiceState] = useState<AIService>('openai');
   const [currentModel, setCurrentModel] = useState<string | null>(null);
@@ -136,3 +136,5 @@ export const useAIApi = () => {
     fetchAvailableModels
   };
 };
+
+export default useAIApi;

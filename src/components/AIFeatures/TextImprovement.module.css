@@ -1,0 +1,53 @@
+@keyframes starRise {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1);
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.5);
+  }
+}
+
+.starContainer {
+  position: relative;
+}
+
+.star1,
+.star2,
+.star3 {
+  opacity: 0;
+  transform-origin: center;
+  transition: opacity 0.3s ease;
+}
+
+.starContainer:hover .star1 {
+  animation: starRise 3.5s ease-in-out infinite;
+  animation-delay: 0s;
+  color: #8a2be2;
+  opacity: 1;
+}
+
+.starContainer:hover .star2 {
+  animation: starRise 3.5s ease-in-out infinite;
+  animation-delay: 0.5s;
+  color: #9932cc;
+  opacity: 1;
+}
+
+.starContainer:hover .star3 {
+  animation: starRise 3.5s ease-in-out infinite;
+  animation-delay: 1s;
+  color: #9400d3;
+  opacity: 1;
+} 

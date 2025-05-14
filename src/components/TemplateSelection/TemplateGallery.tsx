@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { useResume } from "@/context/ResumeContext";
 import templates from "@/data/templates";
 import { ResumeData } from "@/types/resume";
 import { CustomTemplate } from "@/types/templates";
-import CustomTemplateCreator from "../ResumeBuilder/CustomTemplateCreator";
-import { useCustomTemplates } from "@/hooks/useCustomTemplates";
+import CustomTemplateCreatorWrapper from "../ResumeBuilder/CustomTemplateCreatorWrapper";
+import useCustomTemplates from "@/hooks/useCustomTemplates";
 import { TemplateCard } from "./TemplateCard";
 
 export interface Template {
@@ -33,6 +33,7 @@ const SCALE_CONSTANTS = {
 
 const TemplateGallery: React.FC = () => {
   const { selectedTemplate, setSelectedTemplate } = useResume();
+  
   const [isCreatorOpen, setIsCreatorOpen] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<CustomTemplate | null>(
     null
@@ -48,6 +49,11 @@ const TemplateGallery: React.FC = () => {
     loadTemplatesFromStorage,
   } = useCustomTemplates();
 
+  const combinedTemplates = useMemo(() => {
+    // Return all templates, both standard and custom ones
+    return [...templates, ...(customTemplates || [])];
+  }, [customTemplates]);
+  
   const useMediaQuery = (query: string) => {
     const [matches, setMatches] = useState(() =>
       typeof window !== "undefined" ? window.matchMedia(query).matches : false
@@ -114,7 +120,7 @@ const TemplateGallery: React.FC = () => {
   useEffect(() => {
     loadTemplatesFromStorage();
   }, [loadTemplatesFromStorage]);
-
+  
   useEffect(() => {
     updateScale();
     window.addEventListener("resize", updateScale);
@@ -202,7 +208,7 @@ const TemplateGallery: React.FC = () => {
         className="grid grid-cols-1 sm:grid-cols-2 gap-6 px-4 sm:px-0"
         ref={containerRef}
       >
-        {[...templates, ...customTemplates].map((template) => (
+        {combinedTemplates.map((template) => (
           <div key={template.id}>
             <TemplateCard
               template={template}
@@ -216,7 +222,7 @@ const TemplateGallery: React.FC = () => {
         ))}
       </div>
 
-      <CustomTemplateCreator
+      <CustomTemplateCreatorWrapper
         isOpen={isCreatorOpen}
         onClose={() => {
           setIsCreatorOpen(false);
