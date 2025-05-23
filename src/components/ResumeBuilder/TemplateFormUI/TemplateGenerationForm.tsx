@@ -4,10 +4,10 @@ import FormSection from "./FormSection";
 
 interface TemplateGenerationFormProps {
   preferences: TemplatePreferences;
-  freeformDescription: string;
+  freeformDescription: string; // This prop might be redundant if freeformDescription is solely from preferences
   handleFreeformChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleCustomCSSChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  handleGridColumnsChange: (columns: 1 | 2 | 3) => void; // New prop
+  handleGridColumnsChange: (columns: 1 | 2 | 3) => void; 
   showAdvancedOptions: boolean;
   setShowAdvancedOptions: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
@@ -16,15 +16,18 @@ interface TemplateGenerationFormProps {
 
 const TemplateGenerationForm: React.FC<TemplateGenerationFormProps> = ({
   preferences,
-  freeformDescription,
+  // freeformDescription, // Intentionally commented out if using from preferences
   handleFreeformChange,
   handleCustomCSSChange,
-  handleGridColumnsChange, // Destructure new prop
+  handleGridColumnsChange, 
   showAdvancedOptions,
   setShowAdvancedOptions,
   isLoading,
   handleGenerateClick,
 }) => {
+  // Use freeformDescription from preferences, as updated in useTemplateEditor
+  const currentFreeformDesc = preferences.freeformDescription || "";
+
   return (
     <div className="space-y-6">
       <FormSection title="Your Vision">
@@ -38,14 +41,36 @@ const TemplateGenerationForm: React.FC<TemplateGenerationFormProps> = ({
             </label>
             <textarea
               id="freeformDescription"
-              value={freeformDescription}
-              onChange={handleFreeformChange}
+              value={currentFreeformDesc} 
+              onChange={handleFreeformChange} 
               className="w-full px-3 py-2 border border-gray-300 rounded-md 
                        focus:outline-none focus:ring-1 focus:ring-blue-500 
                        h-32 resize-none text-sm"
               placeholder="Describe the template you want in detail. For example: 'A clean, minimal resume with a sidebar for skills and a main section for experience. Use elegant typography and subtle dividers.'"
             ></textarea>
           </div>
+        </div>
+      </FormSection>
+
+      <FormSection title="Layout Options">
+        <div>
+          <label
+            htmlFor="gridColumns"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Number of Columns (for main content area)
+          </label>
+          <select
+            id="gridColumns"
+            name="gridColumns"
+            value={preferences.gridConfiguration?.columns || 1}
+            onChange={(e) => handleGridColumnsChange(parseInt(e.target.value, 10) as 1 | 2 | 3)}
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+          >
+            <option value={1}>1 Column</option>
+            <option value={2}>2 Columns</option>
+            <option value={3}>3 Columns</option>
+          </select>
         </div>
       </FormSection>
 
@@ -61,8 +86,8 @@ const TemplateGenerationForm: React.FC<TemplateGenerationFormProps> = ({
               </label>
               <textarea
                 id="customCSS"
-                value={preferences.customCSS}
-                onChange={handleCustomCSSChange}
+                value={preferences.customCSS || ""} // Ensure value is controlled
+                onChange={handleCustomCSSChange} 
                 className="w-full px-3 py-2 border border-gray-300 rounded-md 
                          focus:outline-none focus:ring-1 focus:ring-blue-500 
                          h-32 resize-none font-mono text-xs"
@@ -100,4 +125,4 @@ const TemplateGenerationForm: React.FC<TemplateGenerationFormProps> = ({
   );
 };
 
-export default TemplateGenerationForm; 
+export default TemplateGenerationForm;

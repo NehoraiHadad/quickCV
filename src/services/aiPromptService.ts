@@ -1,4 +1,5 @@
-import { TemplatePreferences, GridConfiguration } from "@/types/templates"; // Added GridConfiguration
+// GridConfiguration import commented out as it should be referenced via TemplatePreferences
+import { TemplatePreferences, /* GridConfiguration */ } from "@/types/templates"; 
 import { formatPrompt, validatePrompt } from "@/promptTemplates/aiPromptUtils";
 import { templatePromptTemplate } from "@/promptTemplates/templateGenerator";
 
@@ -24,7 +25,7 @@ export class AiPromptService {
     const replacements: Record<string, string> = {
       freeformDescription,
       layout: preferences.layout || (columns > 1 ? `${columns}-column grid` : "single-column"),
-      gridInstructions, // Added new replacement
+      gridInstructions, 
       headerPosition: preferences.headerStyle.position,
       headerAlignment: preferences.headerStyle.alignment,
       headerSize: preferences.headerStyle.size,
