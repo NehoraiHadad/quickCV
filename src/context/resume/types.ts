@@ -37,4 +37,5 @@ export interface ResumeContextValue {
   loadResumeData: (jsonData: string) => void;
   colors: { [key: string]: string };
   updateColors: (updatedColors: Partial<{ [key: string]: string }>) => void;
+  updateSectionHeight: (sectionKey: string, height: string | null) => void;
 } 

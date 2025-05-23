@@ -6,7 +6,7 @@ import {
   Education, 
   Project, 
   AdditionalSection,
-  Skill
+  Skill,
 } from "@/types/resume";
 import { initialResumeData } from "./initialState";
 
@@ -67,7 +67,7 @@ export const useResumeActions = () => {
   };
 
   // Education
-  const addEducation = (newEducation: Omit<Education, "id">) => {
+  const addEducation = (newEducation: Omit<Education, "id">)_ => {
     setResumeData((prevData) => ({
       ...prevData,
       education: [
@@ -179,6 +179,28 @@ export const useResumeActions = () => {
     }));
   };
 
+  // Section Customizations (New Function)
+  const updateSectionHeight = (sectionKey: string, height: string | null) => {
+    setResumeData((prevData) => {
+      const newCustomizations = { ...(prevData.sectionCustomizations || {}) };
+      
+      if (!newCustomizations[sectionKey]) {
+        newCustomizations[sectionKey] = {};
+      }
+
+      if (height === null) {
+        newCustomizations[sectionKey].height = undefined; 
+      } else {
+        newCustomizations[sectionKey].height = height;
+      }
+      
+      return {
+        ...prevData,
+        sectionCustomizations: newCustomizations,
+      };
+    });
+  };
+
   // Import/Export
   const saveResumeData = () => {
     const jsonData = JSON.stringify(resumeData);
@@ -215,7 +237,8 @@ export const useResumeActions = () => {
     addAdditionalSection,
     updateAdditionalSection,
     removeAdditionalSection,
+    updateSectionHeight, 
     saveResumeData,
     loadResumeData,
   };
-}; 
+};

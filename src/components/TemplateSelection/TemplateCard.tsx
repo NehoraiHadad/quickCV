@@ -40,19 +40,32 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({
         </div>
       )}
       <div
+        className="relative group-hover:z-10 group-hover:shadow-xl transition-transform duration-200 ease-out"
         style={{
           width: "210mm",
           height: "297mm",
-          transform: `scale(${scale})`,
+          transform: `scale(${scale})`, // Base scale
           transformOrigin: "top left",
         }}
       >
-        {template.preview}
+        {/* This div will handle the hover scale effect */}
+        <div
+          className="w-full h-full transition-transform duration-200 ease-out group-hover:scale-[1.15]" // Relative scale on hover
+          style={{
+            transformOrigin: "top left",
+          }}
+        >
+          {template.preview}
+        </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center px-4 py-2 bg-white border-t opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-        <h3 className="font-medium">{template.name}</h3>
+      {/* New container for always-visible name and hover-visible controls */}
+      <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center px-4 py-2 bg-white border-t z-20">
+        {/* Always visible template name */}
+        <h3 className="font-medium text-sm">{template.name}</h3> 
+        
+        {/* Container for hover-visible buttons */}
         {isCustomTemplate && onEdit && onDelete && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <button
               onClick={(e) => {
                 e.stopPropagation();

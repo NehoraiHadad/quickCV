@@ -4,6 +4,13 @@ import { SectionProps } from "./types";
 const Header: React.FC<SectionProps> = ({ resumeData, templateColors }) => {
   const { personalInfo } = resumeData;
 
+  const summaryCustomization = resumeData.sectionCustomizations?.summary;
+  const summaryStyle: React.CSSProperties = {};
+  if (summaryCustomization?.height) {
+    summaryStyle.height = summaryCustomization.height;
+    summaryStyle.overflowY = 'auto'; 
+  }
+
   return (
     <>
       <header
@@ -51,9 +58,12 @@ const Header: React.FC<SectionProps> = ({ resumeData, templateColors }) => {
         </div>
       </header>
 
-      {/* Summary */}
       {personalInfo.summary && (
-        <section className="mb-6">
+        <section 
+          className="mb-6" 
+          style={summaryStyle} 
+          data-section-key="summary" // Added this attribute
+        > 
           <h2
             className="text-2xl font-semibold text-gray-800 mb-2"
             style={{ color: templateColors.primary }}
@@ -69,4 +79,4 @@ const Header: React.FC<SectionProps> = ({ resumeData, templateColors }) => {
   );
 };
 
-export default Header; 
+export default Header;

@@ -41,6 +41,12 @@ export interface TemplatePreferences {
   spacing: "compact" | "balanced" | "spacious" | "custom";
   customCSS?: string;
   freeformDescription?: string;
+  gridConfiguration?: GridConfiguration;
+}
+
+export interface GridConfiguration {
+  columns: 1 | 2 | 3;
+  // Potentially other properties like gap, layout definition per column, etc.
 }
 
 export interface CustomTemplate {

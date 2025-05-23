@@ -1,4 +1,4 @@
-import { TemplatePreferences } from "@/types/templates";
+import { TemplatePreferences, GridConfiguration } from "@/types/templates"; // Added GridConfiguration
 import { formatPrompt, validatePrompt } from "@/promptTemplates/aiPromptUtils";
 import { templatePromptTemplate } from "@/promptTemplates/templateGenerator";
 
@@ -15,10 +15,16 @@ export class AiPromptService {
     const freeformDescription = 
       preferences.freeformDescription || "Create a clean, professional resume design";
     
-    // Create replacements object with all the preferences
+    const columns = preferences.gridConfiguration?.columns || 1;
+    let gridInstructions = "The layout should be single-column, with sections flowing vertically.";
+    if (columns > 1) {
+      gridInstructions = `The main content area should use a ${columns}-column grid layout for wider screens. Use the ResponsiveGrid component available in scope: React.createElement(ResponsiveGrid, { cols: { default: 1, sm: ${columns} } }, [/* sections as children here */]). Ensure resume sections like Work Experience, Education, Projects, Skills are appropriately placed within this grid. For smaller screens, it should revert to a single column.`;
+    }
+
     const replacements: Record<string, string> = {
       freeformDescription,
-      layout: preferences.layout,
+      layout: preferences.layout || (columns > 1 ? `${columns}-column grid` : "single-column"),
+      gridInstructions, // Added new replacement
       headerPosition: preferences.headerStyle.position,
       headerAlignment: preferences.headerStyle.alignment,
       headerSize: preferences.headerStyle.size,
@@ -34,14 +40,12 @@ export class AiPromptService {
       customCSS: preferences.customCSS || "",
     };
 
-    // Add custom elements if they exist
     if (preferences.visualElements.customElements) {
       replacements.dividerStyle = preferences.visualElements.customElements.dividerStyle || "";
       replacements.iconSet = preferences.visualElements.customElements.iconSet || "";
       replacements.customBorders = preferences.visualElements.customElements.customBorders || "";
     }
 
-    // Format the prompt with replacements
     return formatPrompt(templatePromptTemplate, replacements);
   }
 
@@ -61,4 +65,4 @@ export class AiPromptService {
   }
 }
 
-export default AiPromptService; 
+export default AiPromptService;

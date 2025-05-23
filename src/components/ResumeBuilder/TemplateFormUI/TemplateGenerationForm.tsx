@@ -7,6 +7,7 @@ interface TemplateGenerationFormProps {
   freeformDescription: string;
   handleFreeformChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleCustomCSSChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleGridColumnsChange: (columns: 1 | 2 | 3) => void; // New prop
   showAdvancedOptions: boolean;
   setShowAdvancedOptions: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
@@ -18,6 +19,7 @@ const TemplateGenerationForm: React.FC<TemplateGenerationFormProps> = ({
   freeformDescription,
   handleFreeformChange,
   handleCustomCSSChange,
+  handleGridColumnsChange, // Destructure new prop
   showAdvancedOptions,
   setShowAdvancedOptions,
   isLoading,

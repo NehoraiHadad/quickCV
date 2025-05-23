@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Template } from "../components/TemplateSelection/TemplateGallery";
-import { CustomTemplate } from "../types/templates";
+import { CustomTemplate, GridConfiguration } from "../types/templates";
 import { ResumeData } from "../types/resume";
 import { sampleResumeData } from "../data/templates";
+import ResponsiveGrid from "@/components/ui/ResponsiveGrid";
 import React from "react";
 
 interface UseCustomTemplatesReturn {
@@ -21,13 +22,18 @@ const useCustomTemplates = (): UseCustomTemplatesReturn => {
   const templatesRef = useRef<Template[]>([]);
 
   // Create template function factory
-  const createTemplateFunction = useCallback((code: string) => {
+  const createTemplateFunction = useCallback((code: string, gridConfiguration?: GridConfiguration) => {
     const templateFunction = new Function(
       "React",
       "resumeData",
       "templateColors",
+      "ResponsiveGrid",
+      // "gridConfig", // Pass grid configuration if needed directly
       `
       const { personalInfo, workExperience, education, skills, projects, additionalSections } = resumeData;
+      // const currentGridConfig = gridConfig || ${JSON.stringify(gridConfiguration)}; 
+      // The above line is an example if you need to pass runtime gridConfig, 
+      // but for now ResponsiveGrid will be available and can be used with any config from template code.
       try {
         with (React) {
           ${code.trim().startsWith('return') ? code : `return (${code})`}
@@ -39,9 +45,11 @@ const useCustomTemplates = (): UseCustomTemplatesReturn => {
       `
     );
 
-    return (resumeData: ResumeData) => {
+    return (resumeData: ResumeData, currentColors?: Record<string, string>) => {
       try {
-        return templateFunction(React, resumeData, resumeData.colors || {});
+        // When calling templateFunction, provide ResponsiveGrid.
+        // The template code can then use ResponsiveGrid directly.
+        return templateFunction(React, resumeData, currentColors || resumeData.colors || {}, ResponsiveGrid);
       } catch (err: unknown) {
         console.error("Error rendering template:", err);
         return React.createElement('div', {
@@ -53,13 +61,14 @@ const useCustomTemplates = (): UseCustomTemplatesReturn => {
 
   // Create template object
   const createTemplate = useCallback((customTemplate: CustomTemplate): Template => {
-    const renderFunction = createTemplateFunction(customTemplate.code);
+    // Pass gridConfiguration from preferences to createTemplateFunction
+    const renderFunction = createTemplateFunction(customTemplate.code, customTemplate.preferences.gridConfiguration);
     
     const template: Template = {
       id: customTemplate.id,
       name: customTemplate.name,
-      render: renderFunction,
-      preview: renderFunction(sampleResumeData),
+      render: (resumeData: ResumeData, colors?: Record<string, string>) => renderFunction(resumeData, colors),
+      preview: renderFunction(sampleResumeData, sampleResumeData.colors), // Pass colors for preview
       isCustom: true
     };
 
@@ -206,7 +215,8 @@ const useCustomTemplates = (): UseCustomTemplatesReturn => {
           borderStyle: "solid",
           useShapes: false
         },
-        spacing: "balanced"
+        spacing: "balanced",
+        gridConfiguration: { columns: 1 } // Default grid configuration
       },
       createdAt: new Date(),
     };

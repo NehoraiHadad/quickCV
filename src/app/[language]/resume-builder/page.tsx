@@ -7,7 +7,8 @@ import Skills from "@/components/ResumeBuilder/Skills";
 import Projects from "@/components/ResumeBuilder/Projects";
 import AdditionalSections from "@/components/ResumeBuilder/AdditionalSections";
 import TemplateSelection from "@/components/ResumeBuilder/TemplateSelection";
-import ResumePreview from "@/components/ResumeBuilder/ResumePreview";
+// Changed import to V2 using alias
+import ResumePreviewV2 from "@/components/ResumeBuilder/ResumePreviewV2"; 
 import ColorCustomization from "@/components/ResumeBuilder/ColorCustomization";
 import Split from 'react-split';
 import { Button } from "@/components/ui";
@@ -18,7 +19,6 @@ const ResumeBuilderContent: React.FC = () => {
   const [mobileView, setMobileView] = useState<"main" | "aside">("main");
   const searchParams = useSearchParams();
   
-  // Get the section from URL query parameter
   useEffect(() => {
     const sectionParam = searchParams.get("section");
     if (sectionParam) {
@@ -45,7 +45,8 @@ const ResumeBuilderContent: React.FC = () => {
       case "colors":
         return <ColorCustomization />;
       case "preview":
-        return <div className="p-4 h-full overflow-auto"><ResumePreview fullPage /></div>;
+        // Changed component
+        return <div className="p-4 h-full overflow-auto"><ResumePreviewV2 fullPage /></div>; 
       default:
         return null;
     }
@@ -58,7 +59,8 @@ const ResumeBuilderContent: React.FC = () => {
           {renderSection()}
         </main>
         <aside className={`w-full p-4 overflow-y-auto bg-gray-100 ${mobileView === "aside" ? "block" : "hidden"}`}>
-          <ResumePreview />
+          {/* Changed component */}
+          <ResumePreviewV2 /> 
         </aside>
       </div>
       
@@ -74,7 +76,8 @@ const ResumeBuilderContent: React.FC = () => {
             {renderSection()}
           </main>
           <aside className="w-full md:w-2/4 p-4 overflow-y-auto bg-gray-100 resume-preview-scroll">
-            <ResumePreview />
+            {/* Changed component */}
+            <ResumePreviewV2 /> 
           </aside>
         </Split>
       </div>

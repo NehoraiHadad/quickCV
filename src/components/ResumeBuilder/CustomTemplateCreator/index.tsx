@@ -59,7 +59,8 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
     resetState,
     handleGenerateClick,
     handleFreeformChange,
-    handleCustomCSSChange
+    handleCustomCSSChange,
+    handleGridColumnsChange // Assume this is returned by useTemplateEditor
   } = useTemplateEditor({
     apiKey,
     service: service ?? undefined,
@@ -120,6 +121,7 @@ const CustomTemplateCreator: React.FC<CustomTemplateCreatorProps> = ({
                   freeformDescription={freeformDescription}
                   handleFreeformChange={handleFreeformChange}
                   handleCustomCSSChange={handleCustomCSSChange}
+                  handleGridColumnsChange={handleGridColumnsChange} // Pass the handler
                   showAdvancedOptions={showAdvancedOptions}
                   setShowAdvancedOptions={setShowAdvancedOptions}
                   isLoading={isLoading}

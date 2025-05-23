@@ -50,9 +50,9 @@ DETAILED STYLE IMPLEMENTATION:
 
 ENHANCED DESIGN FEATURES (aligned with user's vision):
 1. Layout Implementation:
-   - NON Responsive design using Flexbox/Grid (only A4 page needed)
-   - Content hierarchy matching user's preferences
-   - Smooth transitions between sections
+   - Primary Layout Strategy: {{gridInstructions}}
+   - General approach: Ensure content hierarchy matches user's preferences, using Flexbox/Grid as appropriate for structure within the A4 page.
+   - Aim for smooth transitions between sections.
 
 2. Professional Details:
    - Interactive elements with subtle hover effects
@@ -84,4 +84,4 @@ FINAL RESPONSE CHECKLIST:
 - No comments or explanations
 - No markdown formatting
 - Ends with closing parenthesis
-- No trailing characters`; 
+- No trailing characters`;

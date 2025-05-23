@@ -61,6 +61,14 @@ export interface ResumeData {
     accent: string;
   };
   selectedTemplate: string;
+  sectionCustomizations?: {
+    [sectionKey: string]: SectionCustomization;
+  };
+}
+
+export interface SectionCustomization {
+  height?: string; // e.g., "100px", "10rem", "auto"
+  // Future: hidden?: boolean;
 }
 
 // Create more specific Resume Data type variations for skills
