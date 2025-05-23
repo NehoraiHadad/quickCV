@@ -67,7 +67,7 @@ export const useResumeActions = () => {
   };
 
   // Education
-  const addEducation = (newEducation: Omit<Education, "id">)_ => {
+  const addEducation = (newEducation: Omit<Education, "id">) => { // Corrected line
     setResumeData((prevData) => ({
       ...prevData,
       education: [
@@ -226,7 +226,7 @@ export const useResumeActions = () => {
     addWorkExperience,
     updateWorkExperience,
     removeWorkExperience,
-    addEducation,
+    addEducation, 
     updateEducation,
     removeEducation,
     addSkill,
