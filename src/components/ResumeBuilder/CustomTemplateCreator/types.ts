@@ -1,4 +1,5 @@
-import { CustomTemplate } from "../../../hooks/useTemplateEditor";
+// Changed import path for CustomTemplate
+import { CustomTemplate } from "../../../types/templates"; 
 import { TemplatePreferences } from "../../../types/templates";
 import { ResumeData } from "@/types/resume";
 
@@ -54,4 +55,4 @@ export interface TemplateGenerationFormProps {
   setShowAdvancedOptions: (show: boolean) => void;
   isLoading: boolean;
   handleGenerateClick: () => Promise<void>;
-} 
+}
