@@ -4,16 +4,14 @@ import { useTemplateSelection } from "../ResumePreview/useTemplateSelection";
 import { useScaleAndZoom } from "../ResumePreview/useScaleAndZoom";
 import ZoomControls from "../ResumePreview/ZoomControls";
 import TemplateDisplay from "../ResumePreview/TemplateDisplay";
-// DraggableHandle import is not used in the current version of the code.
-// import DraggableHandle from "../ResumePreview/DraggableHandle"; 
 
 export interface ResumePreviewProps { 
   fullPage?: boolean;
 }
 
 const ResumePreviewV2: React.FC<ResumePreviewProps> = ({ fullPage = false }) => {
-  const { resumeData, selectedTemplate, actions } = useResume();
-  const updateSectionHeight = actions?.updateSectionHeight; 
+  // Corrected destructuring from useResume
+  const { resumeData, selectedTemplate, updateSectionHeight } = useResume(); 
 
   const { currentTemplate } = useTemplateSelection(selectedTemplate);
   const {
@@ -28,17 +26,14 @@ const ResumePreviewV2: React.FC<ResumePreviewProps> = ({ fullPage = false }) => 
     displayZoomValue,
   } = useScaleAndZoom();
 
-  // Resizing State
   const [isDragging, setIsDragging] = useState(false);
   const [initialClientY, setInitialClientY] = useState(0);
   const [initialSectionHeight, setInitialSectionHeight] = useState(0); 
   const resizableSectionRef = useRef<HTMLElement | null>(null);
   const summarySectionQuery = '[data-section-key="summary"]';
 
-  // Overflow State
   const [isContentOverflowing, setIsContentOverflowing] = useState(false);
 
-  // Effect to find resizable section
   useEffect(() => {
     if (resumeContentRef.current && currentTemplate?.id) {
       const sectionEl = resumeContentRef.current.querySelector(summarySectionQuery) as HTMLElement;
@@ -48,11 +43,10 @@ const ResumePreviewV2: React.FC<ResumePreviewProps> = ({ fullPage = false }) => 
     }
   }, [resumeData, currentTemplate?.id, resumeContentRef, scale, zoomLevel]);
 
-  // Effect to detect content overflow
   useEffect(() => {
     if (resumeContentRef.current && currentTemplate?.id) { 
       const el = resumeContentRef.current;
-      const tolerance = 5; // px
+      const tolerance = 5; 
       if (el.scrollHeight > el.clientHeight + tolerance) {
         setIsContentOverflowing(true);
       } else {
@@ -89,7 +83,7 @@ const ResumePreviewV2: React.FC<ResumePreviewProps> = ({ fullPage = false }) => 
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
     const finalHeight = resizableSectionRef.current.style.height; 
-    if (updateSectionHeight && finalHeight) {
+    if (typeof updateSectionHeight === 'function' && finalHeight) { 
       updateSectionHeight("summary", finalHeight); 
     }
   }, [isDragging, updateSectionHeight, handleMouseMove]);
@@ -140,10 +134,10 @@ const ResumePreviewV2: React.FC<ResumePreviewProps> = ({ fullPage = false }) => 
         <div 
           style={{
             position: 'absolute',
-            bottom: '40px', // Adjusted to be clearly visible above typical zoom controls
+            bottom: '40px', 
             left: '50%',
-            transform: 'translateX(-50%)', // Center the warning
-            backgroundColor: 'rgba(255, 107, 107, 0.9)', // A more noticeable warning color
+            transform: 'translateX(-50%)', 
+            backgroundColor: 'rgba(255, 107, 107, 0.9)', 
             color: 'white',
             padding: '8px 15px',
             borderRadius: '6px',
