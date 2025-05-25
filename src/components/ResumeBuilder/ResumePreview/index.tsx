@@ -30,7 +30,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ fullPage = false }) => {
   } = useScaleAndZoom();
 
   return (
-    <div ref={containerRef} className={`relative ${fullPage ? 'h-full w-full' : 'h-full'}`}>
+    <div ref={containerRef} className={`relative ${fullPage ? 'h-full w-full' : 'h-full'} overflow-auto`}>
       <ZoomControls
         zoomLevel={zoomLevel}
         displayZoomValue={displayZoomValue}

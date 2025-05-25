@@ -5,7 +5,7 @@ import { createPrintDocument, displayValueToZoomLevel, zoomLevelToDisplayValue }
  * Hook to handle scaling and zooming of resume preview
  */
 export const useScaleAndZoom = () => {
-  const [zoomLevel, setZoomLevel] = useState<number>(0.15);
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const resumeContentRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -23,8 +23,8 @@ export const useScaleAndZoom = () => {
 
         if (viewportWidth > 0 && viewportHeight > 0) {
           const scaleX = viewportWidth / A4_WIDTH_PX;
-          const scaleY = viewportHeight / A4_HEIGHT_PX;
-          const newScale = Math.min(scaleX, scaleY);
+          // const scaleY = viewportHeight / A4_HEIGHT_PX; // scaleY is no longer used
+          const newScale = scaleX; // Scale to fit container width
           setScale(Math.max(newScale, 0.1)); // Ensure scale is not too small or zero
         } else {
           setScale(0.1); // Default to a small scale if viewport dimensions are zero
