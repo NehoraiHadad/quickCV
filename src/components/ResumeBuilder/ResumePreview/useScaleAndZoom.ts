@@ -14,16 +14,16 @@ export const useScaleAndZoom = () => {
   // Update scale based on container width
   useEffect(() => {
     const A4_WIDTH_PX = 794;
-    const A4_HEIGHT_PX = 1123;
+    // const A4_HEIGHT_PX = 1123; // Removed as it's unused
 
     const updateScale = () => {
       if (containerRef.current) { // containerRef is the viewport
         const viewportWidth = containerRef.current.offsetWidth;
-        const viewportHeight = containerRef.current.offsetHeight;
+        const viewportHeight = containerRef.current.offsetHeight; // viewportHeight is still available if needed elsewhere
 
-        if (viewportWidth > 0 && viewportHeight > 0) {
+        if (viewportWidth > 0 && viewportHeight > 0) { // viewportHeight check can remain for robustness
           const scaleX = viewportWidth / A4_WIDTH_PX;
-          // const scaleY = viewportHeight / A4_HEIGHT_PX; // scaleY is no longer used
+          // const scaleY = viewportHeight / A4_HEIGHT_PX; // Removed as scaleY and A4_HEIGHT_PX are unused
           const newScale = scaleX; // Scale to fit container width
           setScale(Math.max(newScale, 0.1)); // Ensure scale is not too small or zero
         } else {
