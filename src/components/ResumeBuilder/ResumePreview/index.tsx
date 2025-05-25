@@ -30,7 +30,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ fullPage = false }) => {
   } = useScaleAndZoom();
 
   return (
-    <div className={`relative ${fullPage ? 'h-full w-full' : 'h-full'}`}>
+    <div ref={containerRef} className={`relative ${fullPage ? 'h-full w-full' : 'h-full'}`}>
       <ZoomControls
         zoomLevel={zoomLevel}
         displayZoomValue={displayZoomValue}
@@ -41,7 +41,6 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ fullPage = false }) => {
         onMouseLeave={() => setShowZoomControls(false)}
       />
       <TemplateDisplay
-        containerRef={containerRef}
         resumeContentRef={resumeContentRef}
         scale={scale}
         zoomLevel={zoomLevel}
