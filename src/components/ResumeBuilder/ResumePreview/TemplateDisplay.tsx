@@ -20,7 +20,6 @@ const initialLayouts: { [key: string]: Layout[] } = {
 };
 
 const TemplateDisplay: React.FC<TemplateDisplayProps> = ({
-  containerRef,
   resumeContentRef,
   scale,
   zoomLevel,
@@ -39,17 +38,16 @@ const TemplateDisplay: React.FC<TemplateDisplayProps> = ({
 
   return (
     <div
-      ref={containerRef}
       className={`overflow-hidden shadow-lg bg-white ${fullPage ? 'mx-auto' : ''}`}
       style={{
-        width: "210mm",
-    // height: "297mm", // Height will be determined by content or grid settings
+        width: "794px", // A4 width in pixels
+        height: "1123px", // A4 height in pixels
         transform: `scale(${scale * zoomLevel})`,
         transformOrigin: "top left",
-        maxWidth: fullPage ? "100%" : undefined,
+        maxWidth: fullPage ? "100%" : undefined, // This might need adjustment if fullPage means fill screen
       }}
     >
-      <div className="h-full" ref={resumeContentRef}>
+      <div className="h-full w-full" ref={resumeContentRef}> {/* Ensure inner div also uses w-full */}
     <ResponsiveReactGridLayout
       className="layout"
       layouts={layouts || initialLayouts}

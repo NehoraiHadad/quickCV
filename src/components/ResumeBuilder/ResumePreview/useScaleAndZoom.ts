@@ -13,11 +13,22 @@ export const useScaleAndZoom = () => {
 
   // Update scale based on container width
   useEffect(() => {
+    const A4_WIDTH_PX = 794;
+    const A4_HEIGHT_PX = 1123;
+
     const updateScale = () => {
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.offsetWidth;
-        const newScale = Math.max(containerWidth / 210, 0.1); // Minimum scale of 0.1
-        setScale(newScale);
+      if (containerRef.current) { // containerRef is the viewport
+        const viewportWidth = containerRef.current.offsetWidth;
+        const viewportHeight = containerRef.current.offsetHeight;
+
+        if (viewportWidth > 0 && viewportHeight > 0) {
+          const scaleX = viewportWidth / A4_WIDTH_PX;
+          const scaleY = viewportHeight / A4_HEIGHT_PX;
+          const newScale = Math.min(scaleX, scaleY);
+          setScale(Math.max(newScale, 0.1)); // Ensure scale is not too small or zero
+        } else {
+          setScale(0.1); // Default to a small scale if viewport dimensions are zero
+        }
       }
     };
     const currentContainer = containerRef.current;

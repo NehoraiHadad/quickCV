@@ -13,7 +13,6 @@ export interface ZoomControlsProps {
 }
 
 export interface TemplateDisplayProps {
-  containerRef: React.RefObject<HTMLDivElement>;
   resumeContentRef: React.RefObject<HTMLDivElement>;
   scale: number;
   zoomLevel: number;

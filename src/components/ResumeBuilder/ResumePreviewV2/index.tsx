@@ -94,7 +94,7 @@ const ResumePreviewV2: React.FC<ResumePreviewProps> = ({ fullPage = false }) => 
   }, [handleMouseMove, handleMouseUp]); // Re-run if these functions change
 
   return (
-    <div className={`relative ${fullPage ? 'h-full w-full' : 'h-full'}`}>
+    <div ref={containerRef} className={`relative ${fullPage ? 'h-full w-full' : 'h-full'}`}>
       <ZoomControls
         zoomLevel={zoomLevel} displayZoomValue={displayZoomValue}
         onZoomChange={handleZoomChange} onPrint={handlePrint}
@@ -103,7 +103,7 @@ const ResumePreviewV2: React.FC<ResumePreviewProps> = ({ fullPage = false }) => 
         onMouseLeave={() => setShowZoomControls(false)}
       />
       <TemplateDisplay
-        containerRef={containerRef} resumeContentRef={resumeContentRef} 
+        resumeContentRef={resumeContentRef} 
         scale={scale} zoomLevel={zoomLevel}
         currentTemplate={currentTemplate} resumeData={resumeData}
         fullPage={fullPage}
