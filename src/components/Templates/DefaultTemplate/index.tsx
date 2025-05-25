@@ -13,7 +13,7 @@ const DefaultTemplate: React.FC<DefaultTemplateProps> = ({ resumeData }) => {
   const templateColors = getTemplateColors(resumeData.colors);
 
   return (
-    <div className="p-6 w-full mx-auto bg-white"> {/* h-full is removed, other classes retained as per instructions */}
+    <div className="p-6 w-[794px] h-[1123px] mx-auto bg-white shadow-lg"> {/* h-full is removed, other classes retained as per instructions */}
       <div key="header">
         <Header resumeData={resumeData} templateColors={templateColors} />
       </div>

@@ -4,8 +4,22 @@ import { SectionProps } from "./types";
 const Projects: React.FC<SectionProps> = ({ resumeData, templateColors }) => {
   const { projects } = resumeData;
 
-  if (projects.length === 0) {
-    return null;
+  if (!projects || projects.length === 0) {
+    return (
+      <section className="mb-6">
+        <h2
+          className="text-2xl font-semibold text-gray-800 mb-3"
+          style={{ color: templateColors.primary }}
+        >
+          Projects
+        </h2>
+        <div className="p-4 bg-gray-50 rounded-lg" style={{ backgroundColor: `${templateColors.accent}10` }}>
+          <p className="text-sm text-gray-500 italic">
+            Showcase your projects here. For example: Personal Portfolio Website - A responsive website built with React and Tailwind CSS.
+          </p>
+        </div>
+      </section>
+    );
   }
 
   return (

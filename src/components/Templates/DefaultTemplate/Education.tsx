@@ -4,8 +4,22 @@ import { SectionProps } from "./types";
 const Education: React.FC<SectionProps> = ({ resumeData, templateColors }) => {
   const { education } = resumeData;
 
-  if (education.length === 0) {
-    return null;
+  if (!education || education.length === 0) {
+    return (
+      <section className="mb-6">
+        <h2
+          className="text-2xl font-semibold text-gray-800 mb-3"
+          style={{ color: templateColors.primary }}
+        >
+          Education
+        </h2>
+        <div className="p-4 bg-gray-50 rounded-lg" style={{ backgroundColor: `${templateColors.accent}10` }}>
+          <p className="text-sm text-gray-500 italic">
+            Detail your educational background here. For example: B.S. in Computer Science - University of Example (2016-2020).
+          </p>
+        </div>
+      </section>
+    );
   }
 
   return (
