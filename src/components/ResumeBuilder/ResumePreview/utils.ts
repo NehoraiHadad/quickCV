@@ -75,12 +75,12 @@ export const createPrintDocument = (resumeContentHtml: string | undefined): Wind
  * Converts a zoom level to a display percentage
  */
 export const zoomLevelToDisplayValue = (zoomLevel: number): number => {
-  return Math.round((zoomLevel / 0.3) * 100);
+  return Math.round(zoomLevel * 100); // MODIFIED as per subtask
 };
 
 /**
  * Converts a display percentage to a zoom level
  */
 export const displayValueToZoomLevel = (displayValue: number): number => {
-  return (displayValue / 100) * 0.3;
-}; 
+  return displayValue / 100; // MODIFIED as per subtask
+};

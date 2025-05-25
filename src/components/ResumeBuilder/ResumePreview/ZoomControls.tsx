@@ -11,7 +11,7 @@ const ZoomControls: React.FC<ZoomControlsProps> = ({
 }) => {
   return (
     <div
-      className="absolute top-[-10px] left-[-10px] z-10 flex items-center bg-white rounded-full p-1 shadow-md"
+      className="absolute top-4 left-4 z-10 flex items-center bg-white rounded-full p-1 shadow-md"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -37,8 +37,8 @@ const ZoomControls: React.FC<ZoomControlsProps> = ({
         <>
           <input
             type="range"
-            min="0"
-            max="100"
+            min="10"
+            max="200"
             step="1"
             value={displayZoomValue}
             onChange={onZoomChange}
