@@ -1,6 +1,6 @@
 import React from "react";
 import { SectionProps } from "./types";
-import { Education as EducationType } from "@/types/resume"; // Assuming Education type
+import { Education as EducationType } from "@/types/resume";
 
 const isEffectivelyEmpty = (str: string | null | undefined): boolean => !str || str.trim() === '';
 
@@ -9,10 +9,9 @@ const isEducationItemEffectivelyEmpty = (edu: EducationType): boolean => {
     isEffectivelyEmpty(edu.institution) &&
     isEffectivelyEmpty(edu.degree) &&
     isEffectivelyEmpty(edu.fieldOfStudy) &&
-    isEffectivelyEmpty(edu.startDate) && // Assuming startDate/endDate are strings
+    isEffectivelyEmpty(edu.startDate) &&
     isEffectivelyEmpty(edu.endDate) &&
-    isEffectivelyEmpty(edu.gpa) // Assuming gpa is a string or can be checked this way; adjust if number
-    // Add other relevant fields from EducationType if necessary, e.g., edu.description if it exists
+    isEffectivelyEmpty(edu.description) // Added: description is a valid field
   );
 };
 
@@ -82,7 +81,6 @@ const Education: React.FC<SectionProps> = ({ resumeData, templateColors }) => {
              style={{ color: templateColors.secondary }}
            >
             {!isEffectivelyEmpty(edu.degree) ? edu.degree : ''}
-            {/* Add comma only if both degree and fieldOfStudy are present and non-empty */}
             {!isEffectivelyEmpty(edu.degree) && !isEffectivelyEmpty(edu.fieldOfStudy) ? ", " : ''}
             {!isEffectivelyEmpty(edu.fieldOfStudy) ? edu.fieldOfStudy : ''}
            </h3>
@@ -96,15 +94,14 @@ const Education: React.FC<SectionProps> = ({ resumeData, templateColors }) => {
               style={{ color: templateColors.accent }}
             >
               {!isEffectivelyEmpty(edu.startDate) ? edu.startDate : ''}
-              {/* Add hyphen only if both dates are present and non-empty */}
               {!isEffectivelyEmpty(edu.startDate) && !isEffectivelyEmpty(edu.endDate) ? " - " : ''}
               {!isEffectivelyEmpty(edu.endDate) ? edu.endDate : ''}
             </p>
           )}
-          {!isEffectivelyEmpty(edu.gpa) && ( 
-             <p className="text-xs text-gray-500">GPA: {edu.gpa}</p>
+          {/* Removed GPA rendering block */}
+          {!isEffectivelyEmpty(edu.description) && (
+            <p className="text-sm text-gray-700 mt-1">{edu.description}</p>
           )}
-          {/* Add other fields like edu.description if available in EducationType and relevant */}
         </div>
       ))}
     </section>
