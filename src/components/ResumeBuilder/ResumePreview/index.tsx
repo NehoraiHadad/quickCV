@@ -12,6 +12,11 @@ export interface ResumePreviewProps {
 const ResumePreview: React.FC<ResumePreviewProps> = ({ fullPage = false }) => {
   const { resumeData, selectedTemplate } = useResume();
   const { currentTemplate } = useTemplateSelection(selectedTemplate);
+
+  // Attempt to get layouts for the current template
+  // This will likely be undefined since resumeData.layouts is not populated yet
+  const templateLayouts = resumeData.layouts?.[selectedTemplate];
+
   const {
     zoomLevel,
     containerRef,
@@ -42,6 +47,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ fullPage = false }) => {
         zoomLevel={zoomLevel}
         currentTemplate={currentTemplate}
         resumeData={resumeData}
+        layouts={templateLayouts} // Pass the layouts
         fullPage={fullPage}
       />
     </div>

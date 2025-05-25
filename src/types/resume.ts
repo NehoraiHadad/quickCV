@@ -1,3 +1,5 @@
+import { Layout } from 'react-grid-layout';
+
 export interface PersonalInfo {
   name: string;
   title: string;
@@ -61,14 +63,12 @@ export interface ResumeData {
     accent: string;
   };
   selectedTemplate: string;
-  sectionCustomizations?: {
-    [sectionKey: string]: SectionCustomization;
+  layouts?: { // Modified this structure
+    [templateId: string]: {
+      [breakpoint: string]: Layout[];
+    };
   };
-}
-
-export interface SectionCustomization {
-  height?: string; // e.g., "100px", "10rem", "auto"
-  // Future: hidden?: boolean;
+  // sectionCustomizations and SectionCustomization interface removed
 }
 
 // Create more specific Resume Data type variations for skills

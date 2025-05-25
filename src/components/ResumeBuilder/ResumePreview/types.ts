@@ -1,3 +1,4 @@
+import { Layout } from 'react-grid-layout';
 import { ResumeData } from "@/types/resume";
 import { Template } from "@/types/templates";
 
@@ -18,5 +19,6 @@ export interface TemplateDisplayProps {
   zoomLevel: number;
   currentTemplate: Template;
   resumeData: ResumeData;
+  layouts?: { [key: string]: Layout[] };
   fullPage?: boolean;
 } 

@@ -20,4 +20,5 @@ export const initialResumeData: ResumeData = {
     accent: "#10B981",
   },
   selectedTemplate: "",
-}; 
+  layouts: {}, // Added this line
+};

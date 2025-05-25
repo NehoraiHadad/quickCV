@@ -4,12 +4,8 @@ import { SectionProps } from "./types";
 const Header: React.FC<SectionProps> = ({ resumeData, templateColors }) => {
   const { personalInfo } = resumeData;
 
-  const summaryCustomization = resumeData.sectionCustomizations?.summary;
-  const summaryStyle: React.CSSProperties = {};
-  if (summaryCustomization?.height) {
-    summaryStyle.height = summaryCustomization.height;
-    summaryStyle.overflowY = 'auto'; 
-  }
+  // Removed sectionCustomizations logic
+  const summaryStyle: React.CSSProperties = {}; 
 
   return (
     <>

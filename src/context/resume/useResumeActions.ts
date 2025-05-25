@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { 
-  ResumeData, 
-  PersonalInfo, 
-  WorkExperience, 
-  Education, 
-  Project, 
+import { Layout } from 'react-grid-layout'; 
+import {
+  ResumeData,
+  PersonalInfo,
+  WorkExperience,
+  Education,
+  Project,
   AdditionalSection,
   Skill,
-} from "@/types/resume";
-import { initialResumeData } from "./initialState";
+} from "@/types/resume"; 
+import { initialResumeData } from "./initialState"; 
 
 export const useResumeActions = () => {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
@@ -36,169 +37,140 @@ export const useResumeActions = () => {
     }));
   };
 
-  // Work Experience
-  const addWorkExperience = (newExperience: Omit<WorkExperience, "id">) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      workExperience: [
-        ...prevData.workExperience,
-        { id: Date.now().toString(), ...newExperience },
-      ],
-    }));
+  // Work Experience (Add, Update, Remove)
+  const addWorkExperience = (newExperience: Omit<WorkExperience, "id">) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      workExperience: [ 
+        ...prevData.workExperience, 
+        { id: Date.now().toString(), ...newExperience }, 
+      ], 
+    })); 
+  };
+  const updateWorkExperience = ( id: string, updatedExperience: Partial<WorkExperience> ) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      workExperience: prevData.workExperience.map((exp) => 
+        exp.id === id ? { ...exp, ...updatedExperience } : exp 
+      ), 
+    })); 
+  };
+  const removeWorkExperience = (id: string) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      workExperience: prevData.workExperience.filter((exp) => exp.id !== id), 
+    })); 
   };
 
-  const updateWorkExperience = (
-    id: string,
-    updatedExperience: Partial<WorkExperience>
-  ) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      workExperience: prevData.workExperience.map((exp) =>
-        exp.id === id ? { ...exp, ...updatedExperience } : exp
-      ),
-    }));
+  // Education (Add, Update, Remove)
+  const addEducation = (newEducation: Omit<Education, "id">) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      education: [ 
+        ...prevData.education, 
+        { id: Date.now().toString(), ...newEducation }, 
+      ], 
+    })); 
+  };
+  const updateEducation = ( id: string, updatedEducation: Partial<Education> ) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      education: prevData.education.map((edu) => 
+        edu.id === id ? { ...edu, ...updatedEducation } : edu 
+      ), 
+    })); 
+  };
+  const removeEducation = (id: string) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      education: prevData.education.filter((edu) => edu.id !== id), 
+    })); 
   };
 
-  const removeWorkExperience = (id: string) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      workExperience: prevData.workExperience.filter((exp) => exp.id !== id),
-    }));
+  // Skills (Add, Remove)
+  const addSkill = (newSkill: string) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      skills: [ 
+        ...prevData.skills, 
+        { id: Date.now().toString(), name: newSkill } 
+      ], 
+    })); 
+  };
+  const removeSkill = (skillToRemove: string | Skill) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      skills: prevData.skills.filter((skill) => { 
+        if (typeof skillToRemove === 'string') { 
+          return skill.name !== skillToRemove; 
+        } else { 
+          return skill.id !== skillToRemove.id; 
+        } 
+      }), 
+    })); 
   };
 
-  // Education
-  const addEducation = (newEducation: Omit<Education, "id">) => { // Corrected line
-    setResumeData((prevData) => ({
-      ...prevData,
-      education: [
-        ...prevData.education,
-        { id: Date.now().toString(), ...newEducation },
-      ],
-    }));
+  // Projects (Add, Update, Remove)
+  const addProject = (newProject: Omit<Project, "id">) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      projects: [ 
+        ...prevData.projects, 
+        { id: Date.now().toString(), ...newProject }, 
+      ], 
+    })); 
+  };
+  const updateProject = (id: string, updatedProject: Partial<Project>) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      projects: prevData.projects.map((proj) => 
+        proj.id === id ? { ...proj, ...updatedProject } : proj 
+      ), 
+    })); 
+  };
+  const removeProject = (id: string) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      projects: prevData.projects.filter((proj) => proj.id !== id), 
+    })); 
   };
 
-  const updateEducation = (
-    id: string,
-    updatedEducation: Partial<Education>
-  ) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      education: prevData.education.map((edu) =>
-        edu.id === id ? { ...edu, ...updatedEducation } : edu
-      ),
-    }));
+  // Additional Sections (Add, Update, Remove)
+  const addAdditionalSection = (newSection: Omit<AdditionalSection, "id">) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      additionalSections: [ 
+        ...prevData.additionalSections, 
+        { id: Date.now().toString(), ...newSection }, 
+      ], 
+    })); 
+  };
+  const updateAdditionalSection = ( id: string, updatedSection: Partial<AdditionalSection> ) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      additionalSections: prevData.additionalSections.map((section) => 
+        section.id === id ? { ...section, ...updatedSection } : section 
+      ), 
+    })); 
+  };
+  const removeAdditionalSection = (id: string) => { 
+    setResumeData((prevData) => ({ 
+      ...prevData, 
+      additionalSections: prevData.additionalSections.filter( 
+        (section) => section.id !== id 
+      ), 
+    })); 
   };
 
-  const removeEducation = (id: string) => {
+  // Layout Customizations - MODIFIED
+  const updateTemplateLayout = (templateId: string, allLayouts: { [breakpoint: string]: Layout[] }) => {
     setResumeData((prevData) => ({
       ...prevData,
-      education: prevData.education.filter((edu) => edu.id !== id),
+      layouts: {
+        ...(prevData.layouts || {}), 
+        [templateId]: allLayouts, // Store the entire allLayouts object
+      },
     }));
-  };
-
-  // Skills
-  const addSkill = (newSkill: string) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      skills: [
-        ...prevData.skills,
-        { id: Date.now().toString(), name: newSkill }
-      ],
-    }));
-  };
-
-  const removeSkill = (skillToRemove: string | Skill) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      skills: prevData.skills.filter((skill) => {
-        if (typeof skillToRemove === 'string') {
-          return skill.name !== skillToRemove;
-        } else {
-          return skill.id !== skillToRemove.id;
-        }
-      }),
-    }));
-  };
-
-  // Projects
-  const addProject = (newProject: Omit<Project, "id">) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      projects: [
-        ...prevData.projects,
-        { id: Date.now().toString(), ...newProject },
-      ],
-    }));
-  };
-
-  const updateProject = (id: string, updatedProject: Partial<Project>) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      projects: prevData.projects.map((proj) =>
-        proj.id === id ? { ...proj, ...updatedProject } : proj
-      ),
-    }));
-  };
-
-  const removeProject = (id: string) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      projects: prevData.projects.filter((proj) => proj.id !== id),
-    }));
-  };
-
-  // Additional Sections
-  const addAdditionalSection = (newSection: Omit<AdditionalSection, "id">) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      additionalSections: [
-        ...prevData.additionalSections,
-        { id: Date.now().toString(), ...newSection },
-      ],
-    }));
-  };
-
-  const updateAdditionalSection = (
-    id: string,
-    updatedSection: Partial<AdditionalSection>
-  ) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      additionalSections: prevData.additionalSections.map((section) =>
-        section.id === id ? { ...section, ...updatedSection } : section
-      ),
-    }));
-  };
-
-  const removeAdditionalSection = (id: string) => {
-    setResumeData((prevData) => ({
-      ...prevData,
-      additionalSections: prevData.additionalSections.filter(
-        (section) => section.id !== id
-      ),
-    }));
-  };
-
-  // Section Customizations (New Function)
-  const updateSectionHeight = (sectionKey: string, height: string | null) => {
-    setResumeData((prevData) => {
-      const newCustomizations = { ...(prevData.sectionCustomizations || {}) };
-      
-      if (!newCustomizations[sectionKey]) {
-        newCustomizations[sectionKey] = {};
-      }
-
-      if (height === null) {
-        newCustomizations[sectionKey].height = undefined; 
-      } else {
-        newCustomizations[sectionKey].height = height;
-      }
-      
-      return {
-        ...prevData,
-        sectionCustomizations: newCustomizations,
-      };
-    });
   };
 
   // Import/Export
@@ -210,6 +182,10 @@ export const useResumeActions = () => {
   const loadResumeData = (jsonData: string) => {
     try {
       const parsedData = JSON.parse(jsonData) as ResumeData;
+      if (!parsedData.layouts) {
+        parsedData.layouts = {}; 
+      }
+      // Further checks for nested structure consistency in layouts can be added if needed
       setResumeData(parsedData);
     } catch (error) {
       console.error("Error parsing JSON data:", error);
@@ -226,7 +202,7 @@ export const useResumeActions = () => {
     addWorkExperience,
     updateWorkExperience,
     removeWorkExperience,
-    addEducation, 
+    addEducation,
     updateEducation,
     removeEducation,
     addSkill,
@@ -237,7 +213,7 @@ export const useResumeActions = () => {
     addAdditionalSection,
     updateAdditionalSection,
     removeAdditionalSection,
-    updateSectionHeight, 
+    updateTemplateLayout, 
     saveResumeData,
     loadResumeData,
   };

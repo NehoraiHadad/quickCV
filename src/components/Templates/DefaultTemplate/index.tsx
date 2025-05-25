@@ -13,35 +13,27 @@ const DefaultTemplate: React.FC<DefaultTemplateProps> = ({ resumeData }) => {
   const templateColors = getTemplateColors(resumeData.colors);
 
   return (
-    <div className="p-6 w-full h-full mx-auto bg-white">
-      {/* Header and Summary */}
-      <Header resumeData={resumeData} templateColors={templateColors} />
-
-      {/* Two-column layout */}
-      <div className="flex flex-row gap-6">
-        {/* Left column */}
-        <div className="w-2/3">
-          {/* Work Experience */}
-          <Experience resumeData={resumeData} templateColors={templateColors} />
-
-          {/* Projects */}
-          <Projects resumeData={resumeData} templateColors={templateColors} />
-        </div>
-
-        {/* Right column */}
-        <div className="w-1/3">
-          {/* Skills */}
-          <Skills resumeData={resumeData} templateColors={templateColors} />
-
-          {/* Education */}
-          <Education resumeData={resumeData} templateColors={templateColors} />
-
-          {/* Additional Sections */}
-          <Additional resumeData={resumeData} templateColors={templateColors} />
-        </div>
+    <div className="p-6 w-full mx-auto bg-white"> {/* h-full is removed, other classes retained as per instructions */}
+      <div key="header">
+        <Header resumeData={resumeData} templateColors={templateColors} />
+      </div>
+      <div key="experience">
+        <Experience resumeData={resumeData} templateColors={templateColors} />
+      </div>
+      <div key="projects">
+        <Projects resumeData={resumeData} templateColors={templateColors} />
+      </div>
+      <div key="skills">
+        <Skills resumeData={resumeData} templateColors={templateColors} />
+      </div>
+      <div key="education">
+        <Education resumeData={resumeData} templateColors={templateColors} />
+      </div>
+      <div key="additional">
+        <Additional resumeData={resumeData} templateColors={templateColors} />
       </div>
     </div>
   );
 };
 
-export default React.memo(DefaultTemplate); 
+export default React.memo(DefaultTemplate);

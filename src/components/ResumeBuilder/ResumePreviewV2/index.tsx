@@ -10,7 +10,7 @@ export interface ResumePreviewProps {
 }
 
 const ResumePreviewV2: React.FC<ResumePreviewProps> = ({ fullPage = false }) => {
-  const { resumeData, selectedTemplate, updateSectionHeight } = useResume(); 
+  const { resumeData, selectedTemplate } = useResume(); // Removed updateSectionHeight
 
   const { currentTemplate } = useTemplateSelection(selectedTemplate);
   const {
@@ -64,11 +64,11 @@ const ResumePreviewV2: React.FC<ResumePreviewProps> = ({ fullPage = false }) => 
     // Pass the actual functions to removeEventListener
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp); 
-    const finalHeight = resizableSectionRef.current.style.height; 
-    if (typeof updateSectionHeight === 'function' && finalHeight) { 
-      updateSectionHeight("summary", finalHeight); 
-    }
-  }, [isDragging, updateSectionHeight, handleMouseMove]); // Added handleMouseMove to dependency array
+    // const finalHeight = resizableSectionRef.current.style.height; // Removed as it's unused
+    // if (typeof updateSectionHeight === 'function' && finalHeight) { 
+    //   updateSectionHeight("summary", finalHeight); 
+    // }
+  }, [isDragging, handleMouseMove]); // Added handleMouseMove
 
   const handleMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     if (!resizableSectionRef.current) return;
@@ -80,7 +80,7 @@ const ResumePreviewV2: React.FC<ResumePreviewProps> = ({ fullPage = false }) => 
     
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
-  }, [scale, zoomLevel, handleMouseMove, handleMouseUp]); // Now these are defined before use
+  }, [scale, zoomLevel, handleMouseMove, handleMouseUp]); // Reverted dependencies
 
   useEffect(() => {
     // This effect ensures that if the component unmounts while dragging, listeners are cleaned up.

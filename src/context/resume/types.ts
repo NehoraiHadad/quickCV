@@ -1,3 +1,4 @@
+import { Layout } from 'react-grid-layout';
 import {
   ResumeData,
   PersonalInfo,
@@ -6,10 +7,10 @@ import {
   Project,
   AdditionalSection,
   Skill
-} from "@/types/resume";
+} from "@/types/resume"; // This now imports ResumeData with the corrected layouts type
 
 export interface ResumeContextValue {
-  resumeData: ResumeData;
+  resumeData: ResumeData; // This will use the updated ResumeData type
   updatePersonalInfo: (updatedInfo: Partial<PersonalInfo>) => void;
   addWorkExperience: (newExperience: Omit<WorkExperience, "id">) => void;
   updateWorkExperience: (
@@ -37,5 +38,6 @@ export interface ResumeContextValue {
   loadResumeData: (jsonData: string) => void;
   colors: { [key: string]: string };
   updateColors: (updatedColors: Partial<{ [key: string]: string }>) => void;
-  updateSectionHeight: (sectionKey: string, height: string | null) => void;
-} 
+  // Modified the signature of updateTemplateLayout
+  updateTemplateLayout: (templateId: string, allLayouts: { [breakpoint: string]: Layout[] }) => void;
+}
