@@ -1,5 +1,5 @@
 import React from "react";
-import React from "react"; // Ensure React is imported
+// Removed duplicate React import
 import { Responsive as ResponsiveReactGridLayout, Layout } from "react-grid-layout";
 import { TemplateDisplayProps, SectionProps } from "./types"; // Ensure SectionProps is imported if needed by SectionComponent, it's in types.ts now
 import { useResume } from "@/context/ResumeContext";
