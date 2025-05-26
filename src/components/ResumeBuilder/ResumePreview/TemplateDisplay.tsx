@@ -1,23 +1,12 @@
 import React from "react";
+import React from "react"; // Ensure React is imported
 import { Responsive as ResponsiveReactGridLayout, Layout } from "react-grid-layout";
-import { TemplateDisplayProps } from "./types";
-import { useResume } from "@/context/ResumeContext"; // Added
+import { TemplateDisplayProps, SectionProps } from "./types"; // Ensure SectionProps is imported if needed by SectionComponent, it's in types.ts now
+import { useResume } from "@/context/ResumeContext";
+import { getTemplateColors as defaultGetTemplateColors } from "@/components/Templates/DefaultTemplate/styles"; // Fallback for colors
+import { TemplateSections } from "@/components/Templates/DefaultTemplate/types"; // For casting sections
 
-// Example layout - adjust as needed
-const initialLayouts: { [key: string]: Layout[] } = {
-  lg: [
-    { i: 'header', x: 0, y: 0, w: 12, h: 2, static: true }, // Made header static for now
-    { i: 'experience', x: 0, y: 2, w: 8, h: 4 },
-    { i: 'education', x: 8, y: 2, w: 4, h: 4 },
-    { i: 'skills', x: 0, y: 6, w: 12, h: 2 },
-  ],
-  md: [ // Add a layout for medium screens
-    { i: 'header', x: 0, y: 0, w: 10, h: 2, static: true },
-    { i: 'experience', x: 0, y: 2, w: 6, h: 4 },
-    { i: 'education', x: 6, y: 2, w: 4, h: 4 },
-    { i: 'skills', x: 0, y: 6, w: 10, h: 2 },
-  ]
-};
+// initialLayouts has been moved to data/templates.ts as defaultLayouts
 
 const TemplateDisplay: React.FC<TemplateDisplayProps> = ({
   resumeContentRef,
@@ -25,62 +14,78 @@ const TemplateDisplay: React.FC<TemplateDisplayProps> = ({
   zoomLevel,
   currentTemplate,
   resumeData,
-  layouts, // Add this
+  layouts, 
   fullPage = false,
 }) => {
-  const { updateTemplateLayout, selectedTemplate } = useResume(); // Added
+  const { updateTemplateLayout, selectedTemplate } = useResume();
 
-  const handleLayoutChange = (currentLayout: Layout[], allLayouts: { [key: string]: Layout[] }) => { // Added
+  const handleLayoutChange = (currentLayout: Layout[], allLayouts: { [key: string]: Layout[] }) => {
     if (selectedTemplate) {
-      updateTemplateLayout(selectedTemplate, allLayouts);
+      // Ensure currentTemplate.id is valid before updating
+      const templateId = currentTemplate.id || selectedTemplate;
+      updateTemplateLayout(templateId, allLayouts);
     }
   };
+
+  // Get sections from the current template
+  const sections = currentTemplate.getSections ? currentTemplate.getSections() : ({} as TemplateSections);
+
+  // Get template colors
+  const templateColors = currentTemplate.getTemplateColors
+    ? currentTemplate.getTemplateColors(resumeData.colors || {})
+    : defaultGetTemplateColors(resumeData.colors || {});
+
+  // Determine the actual layouts to use (from props or fallback to initialLayouts)
+  // The layouts from context/props should ideally conform to all sections available in `sections`
+  // Use layouts from props (resumeData.layouts[templateId]) if available, otherwise fallback to template's defaultLayouts
+  const actualLayouts = (layouts && Object.keys(layouts).length > 0 ? layouts : currentTemplate.defaultLayouts) || {};
+  
+  // Ensure all section keys from `sections` are present in `actualLayouts` for all breakpoints,
+  // or add them with default values if missing. This is important for react-grid-layout.
+  // For simplicity, this step is omitted here, assuming `actualLayouts` is comprehensive.
+  // However, a robust solution would merge `Object.keys(sections)` with `actualLayouts`.
 
   return (
     <div
       className={`overflow-hidden shadow-lg bg-white ${fullPage ? 'mx-auto' : ''}`}
       style={{
-        width: "794px", // A4 width in pixels
-        height: "1123px", // A4 height in pixels
+        width: "794px", 
+        height: "1123px", 
         transform: `scale(${scale * zoomLevel})`,
         transformOrigin: "top left",
-        maxWidth: fullPage ? "100%" : undefined, // This might need adjustment if fullPage means fill screen
+        maxWidth: fullPage ? "100%" : undefined,
       }}
     >
-      <div className="h-full w-full" ref={resumeContentRef}> {/* Ensure inner div also uses w-full */}
-    <ResponsiveReactGridLayout
-      className="layout"
-      layouts={layouts || initialLayouts}
-      breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-      cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-      rowHeight={30}
-      width={793} // Approximate 210mm in pixels (210 * 96 / 25.4)
-      // isDraggable={false} // Consider making items non-draggable for preview
-      // isResizable={false} // Consider making items non-resizable for preview
-      onLayoutChange={handleLayoutChange} // Added
-    >
-      {/* Temporary: Wrap current template output in divs matching initialLayouts keys */}
-      {/* This will need to be replaced by rendering actual resume sections */}
-      <div key="header">
-        {/* Placeholder for header content. For now, the whole template is here. */}
-        {currentTemplate.render(resumeData)}
-      </div>
-      <div key="experience" style={{ backgroundColor: '#f0f0f0' }}>
-        {/* Placeholder for experience section */}
-        Experience Section (placeholder)
-      </div>
-      <div key="education" style={{ backgroundColor: '#e0e0e0' }}>
-        {/* Placeholder for education section */}
-        Education Section (placeholder)
-      </div>
-      <div key="skills" style={{ backgroundColor: '#d0d0d0' }}>
-        {/* Placeholder for skills section */}
-        Skills Section (placeholder)
-      </div>
-    </ResponsiveReactGridLayout>
+      <div className="h-full w-full" ref={resumeContentRef}>
+        <ResponsiveReactGridLayout
+          className="layout"
+          layouts={actualLayouts} // Use actualLayouts
+          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          rowHeight={30}
+          width={794} // Set to width of the container
+          // isDraggable={false} // Uncomment if sections should not be draggable
+          // isResizable={false} // Uncomment if sections should not be resizable
+          onLayoutChange={handleLayoutChange}
+          preventCollision={true} // Optional: might improve layout stability
+        >
+          {Object.keys(sections).map((sectionKey) => {
+            const SectionComponent = sections[sectionKey as keyof TemplateSections];
+            if (!SectionComponent) {
+              console.warn(`No component found for section: ${sectionKey}`);
+              return null;
+            }
+            // The div's key must match the 'i' in the layout definition from actualLayouts
+            return (
+              <div key={sectionKey} className="bg-white overflow-hidden"> {/* Ensure content clipping if necessary */}
+                <SectionComponent resumeData={resumeData} templateColors={templateColors} />
+              </div>
+            );
+          })}
+        </ResponsiveReactGridLayout>
       </div>
     </div>
   );
 };
 
-export default TemplateDisplay; 
+export default React.memo(TemplateDisplay); // Consider React.memo if props are complex

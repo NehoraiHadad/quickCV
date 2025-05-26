@@ -11,9 +11,43 @@ import {
 } from "@/types/resume"; 
 import { initialResumeData } from "./initialState"; 
 
+import templates from "@/data/templates"; // Import templates array
+import { ResumeTemplate } from "../ResumeBuilder/ResumePreview/types"; // To get the type with defaultLayouts
+
 export const useResumeActions = () => {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
-  const [selectedTemplate, setSelectedTemplate] = useState("");
+  const [selectedTemplate, setSelectedTemplateState] = useState<string>(initialResumeData.selectedTemplate || "default");
+
+  // Function to handle template selection and layout initialization
+  const selectTemplateAndInitializeLayouts = (templateId: string) => {
+    setSelectedTemplateState(templateId);
+
+    setResumeData(prevData => {
+      const updatedResumeData = { ...prevData, selectedTemplate: templateId };
+
+      // Check if layouts for this template already exist or if it's a custom template
+      if ((prevData.layouts && prevData.layouts[templateId]) || templateId.startsWith("custom-")) {
+        // If layout exists or it's custom, just return with updated selectedTemplate
+        return updatedResumeData;
+      }
+
+      const chosenTemplate = templates.find(t => t.id === templateId) as ResumeTemplate | undefined;
+
+      if (chosenTemplate && chosenTemplate.defaultLayouts) {
+        return {
+          ...updatedResumeData, // Contains already updated selectedTemplate
+          layouts: {
+            ...(prevData.layouts || {}), // Build upon existing layouts object
+            [templateId]: chosenTemplate.defaultLayouts,
+          },
+        };
+      }
+      
+      // If no specific default layout found for a non-custom template, 
+      // still return with updated selectedTemplate
+      return updatedResumeData;
+    });
+  };
 
   // Colors
   const updateColors = (updatedColors: Partial<{ [key: string]: string }>) => {
@@ -195,7 +229,8 @@ export const useResumeActions = () => {
   return {
     resumeData,
     selectedTemplate,
-    setSelectedTemplate,
+    // setSelectedTemplate, // Expose the new function instead
+    setSelectedTemplate: selectTemplateAndInitializeLayouts,
     colors: resumeData.colors,
     updateColors,
     updatePersonalInfo,

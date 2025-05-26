@@ -1,7 +1,8 @@
 import React from "react";
 import { Template } from "@/components/TemplateSelection/TemplateGallery";
 import { ResumeData } from "@/types/resume";
-import DefaultTemplate from "@/components/Templates/DefaultTemplate";
+import DefaultTemplate, { getSections as getDefaultSections } from "@/components/Templates/DefaultTemplate";
+import { getTemplateColors as getDefaultTemplateColors } from "@/components/Templates/DefaultTemplate/styles";
 import ModernTemplate from "@/components/Templates/ModernTemplate";
 import CleanCardTemplate from "@/components/Templates/CleanCardTemplate";
 import MinimalTemplate from "@/components/Templates/MinimalTemplate";
@@ -105,6 +106,27 @@ const templates: Template[] = [
     preview: React.createElement(DefaultTemplate, {
       resumeData: sampleResumeData,
     }),
+    // Add new properties for DefaultTemplate
+    getSections: getDefaultSections,
+    getTemplateColors: getDefaultTemplateColors,
+    defaultLayouts: { // Moved from TemplateDisplay.tsx
+      lg: [
+        { i: 'header', x: 0, y: 0, w: 12, h: 2, static: true },
+        { i: 'experience', x: 0, y: 2, w: 8, h: 4 },
+        { i: 'education', x: 8, y: 2, w: 4, h: 4 },
+        { i: 'skills', x: 0, y: 6, w: 12, h: 2 },
+        { i: 'projects', x: 0, y: 8, w: 12, h: 3 },
+        { i: 'additional', x: 0, y: 11, w: 12, h: 2 },
+      ],
+      md: [ 
+        { i: 'header', x: 0, y: 0, w: 10, h: 2, static: true },
+        { i: 'experience', x: 0, y: 2, w: 6, h: 4 },
+        { i: 'education', x: 6, y: 2, w: 4, h: 4 },
+        { i: 'skills', x: 0, y: 6, w: 10, h: 2 },
+        { i: 'projects', x: 0, y: 8, w: 10, h: 3 },
+        { i: 'additional', x: 0, y: 11, w: 10, h: 2 },
+      ]
+    },
   },
   {
     id: "modern",
