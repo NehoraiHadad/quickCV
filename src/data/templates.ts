@@ -1,7 +1,9 @@
 import React from "react";
 import { Template } from "@/components/TemplateSelection/TemplateGallery";
 import { ResumeData } from "@/types/resume";
-import DefaultTemplate, { getSections as getDefaultSections } from "@/components/Templates/DefaultTemplate";
+// Try separating the default and named imports for DefaultTemplate
+import DefaultTemplate from "@/components/Templates/DefaultTemplate";
+import { getSections as getDefaultSections } from "@/components/Templates/DefaultTemplate";
 import { getTemplateColors as getDefaultTemplateColors } from "@/components/Templates/DefaultTemplate/styles";
 import ModernTemplate from "@/components/Templates/ModernTemplate";
 import CleanCardTemplate from "@/components/Templates/CleanCardTemplate";

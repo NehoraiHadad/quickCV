@@ -2,22 +2,20 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TemplateDisplay from '../TemplateDisplay';
-import { ResumeTemplate, SectionProps } from '../types'; // SectionProps might not be directly used here, but good for context
+import { ResumeTemplate, SectionProps } from '../types'; 
 import { ResumeData } from '@/types/resume';
 import { Layout } from 'react-grid-layout';
 import { ResumeContextProvider } from '@/context/resume/ResumeContextProvider'; // Import the provider
 
 // Mock Section Components
-const MockHeader: React.FC<SectionProps> = ({ resumeData, templateColors }) => (
+const MockHeader: React.FC<SectionProps> = ({ resumeData }) => ( // templateColors removed
   <div>Header Content: {resumeData.personalInfo.name}</div>
 );
-const MockExperience: React.FC<SectionProps> = ({ resumeData, templateColors }) => (
+const MockExperience: React.FC<SectionProps> = () => ( // resumeData, templateColors removed
   <div>Experience Content</div>
 );
-const MockEducation: React.FC<SectionProps> = ({ resumeData, templateColors }) => (
-  <div>Education Content</div>
-);
-const MockSkills: React.FC<SectionProps> = ({ resumeData, templateColors }) => (
+// MockEducation removed as it's unused
+const MockSkills: React.FC<SectionProps> = () => ( // resumeData, templateColors removed
   <div>Skills Content</div>
 );
 

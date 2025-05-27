@@ -1,6 +1,6 @@
 import React from "react";
-import { DefaultTemplateProps, TemplateSections, SectionProps } from "./types"; // Assuming TemplateSections is defined in types.ts
-import { getTemplateColors } from "./styles";
+import { DefaultTemplateProps, TemplateSections, SectionProps } from "./types"; // DefaultTemplateProps might become unused if resumeData is removed
+// import { getTemplateColors } from "./styles"; // Removed as unused
 import Header from "./Header";
 import Experience from "./Experience";
 import Projects from "./Projects";
@@ -20,14 +20,14 @@ const sections: TemplateSections = {
 };
 
 // Function to get all sections
-export const getSections = () => sections;
+const getSections = () => sections; // Removed direct export
 
 // The DefaultTemplate component might be simplified or changed later.
 // For now, it can remain, or be a simple wrapper if needed.
 // Or, it could be removed if TemplateDisplay will use getSections() directly.
 // Let's keep it simple for now:
-const DefaultTemplate: React.FC<DefaultTemplateProps> = ({ resumeData }) => {
-  // const templateColors = getTemplateColors(resumeData.colors);
+const DefaultTemplate: React.FC<DefaultTemplateProps> = (/* { resumeData } */) => { // resumeData removed
+  // const templateColors = getTemplateColors(resumeData.colors); // resumeData is no longer available here
   // This component might not render anything directly anymore,
   // or it could render a default layout if needed for other purposes.
   // For this subtask, focus on making sections available via getSections.
@@ -36,4 +36,5 @@ const DefaultTemplate: React.FC<DefaultTemplateProps> = ({ resumeData }) => {
   return null; 
 };
 
+export { getSections }; // Added export statement at the end
 export default React.memo(DefaultTemplate);

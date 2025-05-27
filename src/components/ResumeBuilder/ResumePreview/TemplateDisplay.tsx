@@ -1,7 +1,7 @@
 import React from "react";
 // Removed duplicate React import
 import { Responsive as ResponsiveReactGridLayout, Layout } from "react-grid-layout";
-import { TemplateDisplayProps, SectionProps } from "./types"; // Ensure SectionProps is imported if needed by SectionComponent, it's in types.ts now
+import { TemplateDisplayProps } from "./types"; // SectionProps removed as it's unused
 import { useResume } from "@/context/ResumeContext";
 import { getTemplateColors as defaultGetTemplateColors } from "@/components/Templates/DefaultTemplate/styles"; // Fallback for colors
 import { TemplateSections } from "@/components/Templates/DefaultTemplate/types"; // For casting sections
