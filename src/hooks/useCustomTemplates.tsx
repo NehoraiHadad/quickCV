@@ -1,25 +1,32 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Template } from "../components/TemplateSelection/TemplateGallery";
+// import { Template } from "../components/TemplateSelection/TemplateGallery"; // Will use ResumeTemplate
 import { CustomTemplate, GridConfiguration } from "../types/templates";
 import { ResumeData } from "../types/resume";
+import { Layout } from 'react-grid-layout'; // Added
+import { 
+  ResumeTemplate, 
+  TemplateSections, 
+  ColorPalette,
+  SectionProps // Added for sections.main
+} from "@/components/ResumeBuilder/ResumePreview/types"; // Added
 import { sampleResumeData } from "../data/templates";
 import ResponsiveGrid from "@/components/ui/ResponsiveGrid";
 import React from "react";
 
 interface UseCustomTemplatesReturn {
-  customTemplates: Template[];
+  customTemplates: ResumeTemplate[]; // Changed to ResumeTemplate[]
   saveTemplate: (template: CustomTemplate) => Promise<void>;
   deleteTemplate: (templateId: string) => Promise<void>;
   getTemplateForEditing: (templateId: string) => CustomTemplate | null;
   resetTemplateCode: () => CustomTemplate;
-  addTemplate: (template: CustomTemplate) => Promise<Template>;
-  getCustomTemplates: () => Template[];
+  addTemplate: (template: CustomTemplate) => Promise<ResumeTemplate>; // Changed to ResumeTemplate
+  getCustomTemplates: () => ResumeTemplate[]; // Changed to ResumeTemplate[]
   loadTemplatesFromStorage: () => Promise<void>;
 }
 
 const useCustomTemplates = (): UseCustomTemplatesReturn => {
-  const [customTemplates, setCustomTemplates] = useState<Template[]>([]);
-  const templatesRef = useRef<Template[]>([]);
+  const [customTemplates, setCustomTemplates] = useState<ResumeTemplate[]>([]); // Changed to ResumeTemplate[]
+  const templatesRef = useRef<ResumeTemplate[]>([]); // Changed to ResumeTemplate[]
 
   // Create template function factory
   const createTemplateFunction = useCallback((code: string, gridConfiguration?: GridConfiguration) => {
@@ -60,16 +67,46 @@ const useCustomTemplates = (): UseCustomTemplatesReturn => {
   }, []);
 
   // Create template object
-  const createTemplate = useCallback((customTemplate: CustomTemplate): Template => {
-    // Pass gridConfiguration from preferences to createTemplateFunction
+  const createTemplate = useCallback((customTemplate: CustomTemplate): ResumeTemplate => {
     const renderFunction = createTemplateFunction(customTemplate.code, customTemplate.preferences.gridConfiguration);
+
+    const templateColors: ColorPalette = {
+      primary: customTemplate.preferences.colorScheme.primary,
+      secondary: customTemplate.preferences.colorScheme.secondary,
+      accent: customTemplate.preferences.colorScheme.accent,
+      // Assuming ColorPalette does not include background, if it does, map it:
+      // background: customTemplate.preferences.colorScheme.background,
+    };
+
+    const sections: TemplateSections = {
+      main: ({ resumeData, templateColors: sectionColors }) => renderFunction(resumeData, sectionColors)
+    };
     
-    const template: Template = {
+    const defaultLayouts: { [key: string]: Layout[] } = {
+      lg: [{ i: 'main', x: 0, y: 0, w: 12, h: 20, static: true }], 
+      md: [{ i: 'main', x: 0, y: 0, w: 10, h: 20, static: true }],
+      sm: [{ i: 'main', x: 0, y: 0, w: 6, h: 20, static: true }],
+      // Add other breakpoints if your ResponsiveReactGridLayout uses them
+    };
+
+    const component: React.FC<SectionProps> = ({ resumeData: data, templateColors: tc }) => {
+      const MainSection = sections.main;
+      // The layouts prop for SectionProps is optional, so not passing it here.
+      // If SectionProps requires layouts, this needs adjustment.
+      // For now, assuming SectionProps makes layouts optional or it's not used by the custom code directly.
+      return <MainSection resumeData={data} templateColors={tc} />;
+    };
+    
+    const template: ResumeTemplate = {
       id: customTemplate.id,
       name: customTemplate.name,
-      render: (resumeData: ResumeData, colors?: Record<string, string>) => renderFunction(resumeData, colors),
-      preview: renderFunction(sampleResumeData, sampleResumeData.colors), // Pass colors for preview
-      isCustom: true
+      component: component,
+      sections: sections,
+      templateColors: templateColors,
+      defaultLayouts: defaultLayouts,
+      render: (data, tc) => sections.main({ resumeData: data, templateColors: tc || templateColors }),
+      preview: sections.main({ resumeData: sampleResumeData, templateColors: templateColors }),
+      isCustom: true,
     };
 
     return template;
@@ -135,12 +172,12 @@ const useCustomTemplates = (): UseCustomTemplatesReturn => {
   }, [loadTemplatesFromStorage]);
 
   // Get custom templates
-  const getCustomTemplates = useCallback((): Template[] => {
+  const getCustomTemplates = useCallback((): ResumeTemplate[] => { // Changed to ResumeTemplate[]
     return customTemplates;
   }, [customTemplates]);
 
   // Add template
-  const addTemplate = useCallback(async (template: CustomTemplate): Promise<Template> => {
+  const addTemplate = useCallback(async (template: CustomTemplate): Promise<ResumeTemplate> => { // Changed to ResumeTemplate
     try {
       const newTemplate = createTemplate(template);
       

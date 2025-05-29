@@ -12,12 +12,14 @@ export interface ZoomControlsProps {
   onMouseLeave: () => void;
 }
 
-import { SectionProps as DefaultSectionProps, TemplateSections } from "@/components/Templates/DefaultTemplate/types"; // Assuming SectionProps is needed by sections
+import { ColorPalette, DefaultTemplateProps, SectionProps as DefaultSectionProps, TemplateSections } from "@/components/Templates/DefaultTemplate/types"; // Added ColorPalette, DefaultTemplateProps
 
 // Define a more specific type for the currentTemplate prop
 export interface ResumeTemplate extends Template {
-  getSections?: () => TemplateSections; // Made optional for now to avoid breaking other templates
-  getTemplateColors?: (colors: Record<string, string>) => Record<string, string>; // Also optional
+  sections: TemplateSections; 
+  templateColors: ColorPalette; // Changed from Record<string, string> to ColorPalette
+  defaultLayouts?: { [key: string]: Layout[] }; 
+  component?: React.FC<DefaultTemplateProps>; 
 }
 
 export interface TemplateDisplayProps {

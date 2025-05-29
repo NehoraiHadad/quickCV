@@ -19,14 +19,19 @@ const sections: TemplateSections = {
   additional: (props: SectionProps) => <Additional {...props} />,
 };
 
-// Function to get all sections
-const getSections = () => sections; // Removed direct export
+// The 'sections' object is defined above.
+// We will attach it as a static property to DefaultTemplate component.
+
+// Define an interface for the component that includes the static 'sections' property
+interface DefaultTemplateComponent extends React.FC<DefaultTemplateProps> {
+  sections: TemplateSections;
+}
 
 // The DefaultTemplate component might be simplified or changed later.
 // For now, it can remain, or be a simple wrapper if needed.
 // Or, it could be removed if TemplateDisplay will use getSections() directly.
 // Let's keep it simple for now:
-const DefaultTemplate: React.FC<DefaultTemplateProps> = (/* { resumeData } */) => { // resumeData removed
+const DefaultTemplate: DefaultTemplateComponent = (/* { resumeData } */) => { // resumeData removed, type changed
   // const templateColors = getTemplateColors(resumeData.colors); // resumeData is no longer available here
   // This component might not render anything directly anymore,
   // or it could render a default layout if needed for other purposes.
@@ -36,5 +41,10 @@ const DefaultTemplate: React.FC<DefaultTemplateProps> = (/* { resumeData } */) =
   return null; 
 };
 
-export { getSections }; // Added export statement at the end
-export default React.memo(DefaultTemplate);
+// Attach sections as a static property to the DefaultTemplate component
+DefaultTemplate.sections = sections; // Removed 'as any' cast
+
+// Cast the memoized component to DefaultTemplateComponent to ensure type correctness for static properties
+const MemoizedDefaultTemplate = React.memo(DefaultTemplate) as unknown as DefaultTemplateComponent;
+
+export default MemoizedDefaultTemplate;

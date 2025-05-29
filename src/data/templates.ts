@@ -1,14 +1,17 @@
 import React from "react";
-import { Template } from "@/components/TemplateSelection/TemplateGallery";
+// import { Template } from "@/components/TemplateSelection/TemplateGallery"; // Will use ResumeTemplate instead
 import { ResumeData } from "@/types/resume";
+import { ResumeTemplate } from "@/components/ResumeBuilder/ResumePreview/types"; // Import ResumeTemplate
+import { initialResumeData } from "@/context/resume/initialState"; // Import initialResumeData
+
 // Try separating the default and named imports for DefaultTemplate
 import DefaultTemplate from "@/components/Templates/DefaultTemplate";
-import { getSections as getDefaultSections } from "@/components/Templates/DefaultTemplate";
+// import { getSections as getDefaultSections } from "@/components/Templates/DefaultTemplate"; // Removed named import for getSections
 import { getTemplateColors as getDefaultTemplateColors } from "@/components/Templates/DefaultTemplate/styles";
 import ModernTemplate from "@/components/Templates/ModernTemplate";
 import CleanCardTemplate from "@/components/Templates/CleanCardTemplate";
 import MinimalTemplate from "@/components/Templates/MinimalTemplate";
-import { CustomTemplate } from "@/types/templates";
+import { CustomTemplate } from "@/types/templates"; // Keep this for createCustomTemplateObject if needed
 
 export const sampleResumeData: ResumeData = {
   personalInfo: {
@@ -96,22 +99,23 @@ export const sampleResumeData: ResumeData = {
     secondary: "#144790",
     accent: "#6175db",
   },
-  selectedTemplate: "default"
+  selectedTemplate: "default",
+  layouts: {}, // Ensuring layouts is part of sampleResumeData if ResumeData type expects it
 };
 
-const templates: Template[] = [
+const templates: ResumeTemplate[] = [ // Changed type to ResumeTemplate[]
   {
     id: "default",
     name: "Default",
-    render: (resumeData: ResumeData) =>
+    component: DefaultTemplate, // Added component property
+    render: (resumeData: ResumeData) => // render can still exist if used elsewhere (e.g. export)
       React.createElement(DefaultTemplate, { resumeData }),
     preview: React.createElement(DefaultTemplate, {
       resumeData: sampleResumeData,
     }),
-    // Add new properties for DefaultTemplate
-    getSections: getDefaultSections,
-    getTemplateColors: getDefaultTemplateColors,
-    defaultLayouts: { // Moved from TemplateDisplay.tsx
+    sections: DefaultTemplate.sections, // Removed 'as any' cast
+    templateColors: getDefaultTemplateColors(initialResumeData.colors || {}), // Pre-populate templateColors
+    defaultLayouts: { 
       lg: [
         { i: 'header', x: 0, y: 0, w: 12, h: 2, static: true },
         { i: 'experience', x: 0, y: 2, w: 8, h: 4 },
@@ -129,19 +133,24 @@ const templates: Template[] = [
         { i: 'additional', x: 0, y: 11, w: 10, h: 2 },
       ]
     },
+    // Removed getSections and getTemplateColors as they are now direct properties
   },
   {
     id: "modern",
     name: "Modern",
+    component: ModernTemplate, // Added component property
     render: (resumeData: ResumeData) =>
       React.createElement(ModernTemplate, { resumeData }),
     preview: React.createElement(ModernTemplate, {
       resumeData: sampleResumeData,
     }),
+    // sections and templateColors would be undefined for this template
+    // unless also pre-populated or handled by ResumeTemplate type making them optional
   },
   {
     id: "CleanCard",
     name: "CleanCard",
+    component: CleanCardTemplate, // Added component property
     render: (resumeData: ResumeData) =>
       React.createElement(CleanCardTemplate, { resumeData }),
     preview: React.createElement(CleanCardTemplate, {
@@ -151,6 +160,7 @@ const templates: Template[] = [
   {
     id: "minimal",
     name: "Minimal",
+    component: MinimalTemplate, // Added component property
     render: (resumeData: ResumeData) =>
       React.createElement(MinimalTemplate, { resumeData }),
     preview: React.createElement(MinimalTemplate, {
@@ -159,14 +169,17 @@ const templates: Template[] = [
   },
 ];
 
+// createCustomTemplateObject might need to be updated if it's supposed to return ResumeTemplate now
+// For now, assuming its return type 'Template' is a base type for ResumeTemplate
 export const createCustomTemplateObject = (
   customTemplate: CustomTemplate
-): Template => {
+): ResumeTemplate => { // Changed return type to ResumeTemplate
   console.log("Creating template object for:", customTemplate.id);
 
-  const template = {
+  const template: ResumeTemplate = { // Ensure this object conforms to ResumeTemplate
     id: customTemplate.id,
     name: customTemplate.name,
+    // component: // Custom templates are rendered via function, no static component
     render: (resumeData: ResumeData) => {
       try {
         console.log("Rendering template:", customTemplate.id);

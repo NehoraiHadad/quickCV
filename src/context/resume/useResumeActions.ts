@@ -12,7 +12,7 @@ import {
 import { initialResumeData } from "./initialState"; 
 
 import templates from "@/data/templates"; // Import templates array
-import { ResumeTemplate } from "../ResumeBuilder/ResumePreview/types"; // To get the type with defaultLayouts
+import { ResumeTemplate } from "@/components/ResumeBuilder/ResumePreview/types"; // To get the type with defaultLayouts
 
 export const useResumeActions = () => {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);

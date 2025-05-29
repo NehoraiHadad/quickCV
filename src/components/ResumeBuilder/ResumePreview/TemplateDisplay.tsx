@@ -3,7 +3,7 @@ import React from "react";
 import { Responsive as ResponsiveReactGridLayout, Layout } from "react-grid-layout";
 import { TemplateDisplayProps } from "./types"; // SectionProps removed as it's unused
 import { useResume } from "@/context/ResumeContext";
-import { getTemplateColors as defaultGetTemplateColors } from "@/components/Templates/DefaultTemplate/styles"; // Fallback for colors
+// import { getTemplateColors as defaultGetTemplateColors } from "@/components/Templates/DefaultTemplate/styles"; // Removed as templateColors is now a direct prop
 import { TemplateSections } from "@/components/Templates/DefaultTemplate/types"; // For casting sections
 
 // initialLayouts has been moved to data/templates.ts as defaultLayouts
@@ -28,12 +28,13 @@ const TemplateDisplay: React.FC<TemplateDisplayProps> = ({
   };
 
   // Get sections from the current template
-  const sections = currentTemplate.getSections ? currentTemplate.getSections() : ({} as TemplateSections);
+  const sections = currentTemplate.sections; // Access as direct property
 
   // Get template colors
-  const templateColors = currentTemplate.getTemplateColors
-    ? currentTemplate.getTemplateColors(resumeData.colors || {})
-    : defaultGetTemplateColors(resumeData.colors || {});
+  const templateColors = currentTemplate.templateColors; // Access as direct property
+  // Note: defaultGetTemplateColors import might become unused if this is the only place it was a fallback.
+  // The responsibility of merging user-defined resumeData.colors with base template colors
+  // is now in data/templates.ts for initial load, or needs to be handled by a color update mechanism.
 
   // Determine the actual layouts to use (from props or fallback to initialLayouts)
   // The layouts from context/props should ideally conform to all sections available in `sections`

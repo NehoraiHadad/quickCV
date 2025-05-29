@@ -1,11 +1,16 @@
 import { useMemo, useEffect } from "react";
-import templates from "@/data/templates";
-import useCustomTemplates from "@/hooks/useCustomTemplates";
+import templates from "@/data/templates"; // Should be ResumeTemplate[]
+import useCustomTemplates from "@/hooks/useCustomTemplates"; // Should return customTemplates as ResumeTemplate[]
+import { ResumeTemplate } from "./types"; // Import ResumeTemplate for explicit typing
+
+interface UseTemplateSelectionReturn {
+  currentTemplate: ResumeTemplate; // Explicitly type the returned currentTemplate
+}
 
 /**
  * Hook to handle template selection logic
  */
-export const useTemplateSelection = (selectedTemplate: string) => {
+export const useTemplateSelection = (selectedTemplate: string): UseTemplateSelectionReturn => {
   const { customTemplates, loadTemplatesFromStorage } = useCustomTemplates();
 
   // Load custom templates when needed
@@ -16,8 +21,9 @@ export const useTemplateSelection = (selectedTemplate: string) => {
   }, [selectedTemplate, loadTemplatesFromStorage]);
 
   // Select the current template from all available templates
-  const currentTemplate = useMemo(() => {
-    const allTemplates = [...templates, ...customTemplates];
+  const currentTemplate: ResumeTemplate = useMemo(() => {
+    // Both `templates` and `customTemplates` should be ResumeTemplate[] now.
+    const allTemplates: ResumeTemplate[] = [...templates, ...customTemplates];
 
     console.log("Template Selection Process:", {
       selectedTemplateId: selectedTemplate,
@@ -27,14 +33,16 @@ export const useTemplateSelection = (selectedTemplate: string) => {
       allTemplateIds: allTemplates.map((t) => t.id),
     });
 
-    const template = allTemplates.find((t) => t.id === selectedTemplate);
+    const template: ResumeTemplate | undefined = allTemplates.find((t) => t.id === selectedTemplate);
 
     if (!template) {
-      return templates[0];
+      // Fallback to the first static template if the selected one isn't found.
+      // This assumes `templates` array is never empty and contains valid ResumeTemplate objects.
+      return templates[0]; 
     }
 
     return template;
   }, [selectedTemplate, customTemplates]);
 
   return { currentTemplate };
-} 
+}

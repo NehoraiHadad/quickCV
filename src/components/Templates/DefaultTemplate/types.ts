@@ -6,11 +6,14 @@ export interface DefaultTemplateProps {
 
 export interface SectionProps {
   resumeData: ResumeData;
-  templateColors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-  };
+  templateColors: ColorPalette; // Changed to use ColorPalette type
+}
+
+// Define the ColorPalette type
+export interface ColorPalette {
+  primary: string;
+  secondary: string;
+  accent: string;
 }
 
 export type TemplateSections = {
